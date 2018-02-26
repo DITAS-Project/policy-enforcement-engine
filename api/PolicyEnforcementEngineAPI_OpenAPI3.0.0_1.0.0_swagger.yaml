@@ -1,0 +1,75 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+  - description: Policy Enforcement Engine API
+    url: https://virtserver.swaggerhub.com/DIT6/PolicyEnforcementEngineAPI_OpenAPI3.0.0/1.0.0
+info:
+  description: Policy enforcement engine API
+  version: "1.0.0"
+  title: Policy enforcement engine API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /sql-query:
+    post:
+      tags:
+        - developers
+      summary: rewrite query
+      operationId: queryRewrite
+      description: Rewrites query to access only compliant data
+      parameters:
+      - in: query
+        name: sqlQuery
+        description: SQL query
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: purpose
+        required: true
+        description: access purpose
+        schema:
+          type: string
+      - in: query
+        name: requester
+        description: requester
+        schema:
+          type: string
+      - in: query
+        name: blueprintId
+        # Used to get the schema from the blueprint definition
+        description: blueprint ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: query rewritten based on policies for accessing compliant data only
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: bad input parameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/RequestAttribute'
+        description: request attributes
+components:
+  schemas:
+    RequestAttribute:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
