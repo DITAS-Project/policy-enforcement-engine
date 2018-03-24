@@ -3,13 +3,8 @@
 # ~~~~
 
 # Home page
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
-GET     /webjars/*file                    controllers.WebJarAssets.at(file)
-
+GET /swagger.json	controllers.ApiHelpController.getResources
+GET /docs/	controllers.EnforcementEngine.redirectDocs
 # GET     /locations/json       controllers.ApplicationController.index
 
-GET	/rewrite-sql-query/:query/:purpose/:blueprintId	controllers.EnforcementEngine.rewriteSQLQuery(query: String, purpose: String, blueprintId: String)
-
+POST	/rewrite-sql-query	controllers.EnforcementEngine.rewriteSQLQuery

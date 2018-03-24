@@ -1,6 +1,7 @@
-@import b3.vertical.fieldConstructor
-@import models._
-@import controllers._
-@(webJarAssets: WebJarAssets)(implicit message:Messages,flash:Flash)
-@main("knolx")(webJarAssets) {
+@(message: String)
+
+@main("Enforcement Engine") {
+
+    @play20.welcome(message)
+
 }

@@ -22,6 +22,9 @@ libraryDependencies ++= {
   		"org.webjars" %% "webjars-play" % "2.5.0-1",
   		"org.webjars" % "bootstrap" % "3.3.6",
   		"org.apache.spark" % "spark-sql_2.11" % sparkVersion,
+                "io.swagger" %% "swagger-play2" % "1.5.3",
+                "org.webjars" %% "webjars-play" % "2.5.0-4",
+                "org.webjars" % "swagger-ui" % "2.2.0",
   		"com.adrianhurt" %% "play-bootstrap" % "1.0-P25-B3"
 	)
 }
