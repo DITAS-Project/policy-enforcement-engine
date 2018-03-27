@@ -2,7 +2,6 @@ package bootstrap
 
 import scala.concurrent.Future
 
-import org.apache.spark.sql.SparkSession
 
 import javax.inject.Inject
 import javax.inject.Singleton

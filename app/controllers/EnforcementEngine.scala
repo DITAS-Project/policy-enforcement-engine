@@ -2,7 +2,6 @@ package controllers
 
 import scala.concurrent.Future
 
-import org.apache.spark.sql.SparkSession
 
 import io.swagger.annotations._
 import play.api.mvc.{Action, BodyParsers, Controller}
@@ -34,6 +33,9 @@ class EnforcementEngine @Inject() (config: Configuration, initService: Init, par
           paramType="body"
           )
       ))
+  @ApiResponses(Array(
+     new ApiResponse(code=400, message="Invalid parameters supplied"),
+     new ApiResponse(code=404, message="Access purpose not found")))
   def rewriteSQLQuery = Action.async(BodyParsers.parse.json[QueryObject]) { request =>
   
     val queryObject = request.body
@@ -48,8 +50,8 @@ class EnforcementEngine @Inject() (config: Configuration, initService: Init, par
   }
 
 def redirectDocs = Action {
-//  Redirect(url = "/assets/lib/swagger-ui/index.html", queryString = Map("url" -> Seq("/swagger.json")))
- Redirect("/assets/lib/swagger-ui/index.html?/url=/swagger.json")
+  Redirect(url = "/web/public/main/lib/swagger-ui/index.html", queryString = Map("url" -> Seq("/swagger.json")))
+// Redirect("/assets/lib/swagger-ui/index.html?/url=/swagger.json")
 }
   
 }

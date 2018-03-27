@@ -3,8 +3,10 @@
 # ~~~~
 
 # Home page
-GET /swagger.json	controllers.ApiHelpController.getResources
-GET /docs/	controllers.EnforcementEngine.redirectDocs
+GET /docs/swagger.json	controllers.ApiHelpController.getResources
+#GET /docs/	controllers.EnforcementEngine.redirectDocs
+GET	/docs/	controllers.Assets.at(path="/public/swagger-ui/", file="index.html")
+GET	/docs/*file	controllers.Assets.at(path="/public//swagger-ui/", file)
 # GET     /locations/json       controllers.ApplicationController.index
 
 POST	/rewrite-sql-query	controllers.EnforcementEngine.rewriteSQLQuery
