@@ -26,3 +26,6 @@ libraryDependencies ++= {
 libraryDependencies += "org.codehaus.janino" % "janino" % "3.0.8"
 libraryDependencies ~= { _.map(_.exclude("org.slf4j", "slf4j-log4j12")) }
 libraryDependencies += guice
+
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
