@@ -13,7 +13,7 @@ import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
-import play.api.mvc.Controller
+import play.api.mvc.ControllerHelpers
 import play.mvc.BodyParser
 import play.api.Logger
 
@@ -21,7 +21,7 @@ import models.QueryObject
 
 // TODO thread pool!!!
 @Api("Enforcement Engine")
-class EnforcementEngine @Inject() (config: Configuration, initService: Init, parser: BodyParser.Default)(val messagesApi: MessagesApi) extends Controller {
+class EnforcementEngine @Inject() (config: Configuration, initService: Init, parser: BodyParser.Default)(val messagesApi: MessagesApi) extends ControllerHelpers {
 
 
   // TODO add request and requester attributes
