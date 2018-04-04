@@ -1,32 +1,21 @@
-
-import scala.concurrent.Future
-
-import org.scalatestplus.play._
-
+import org.junit.runner.RunWith
+import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import play.api.mvc._
 import play.api.test._
-import play.api.test.Helpers._
 
-import controllers.EnforcementEngine
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.concurrent.ScalaFutures
-import play.api.i18n.MessagesApi
-import scala.concurrent.ExecutionContext
-import akka.actor.ActorSystem
-import play.api.Application
-import play.test.WithApplication
-import play.api.inject.guice.GuiceApplicationBuilder
-import controllers.EnforcementEngine
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+
+import javax.inject.Inject
+import scala.concurrent.Future
+
 import models.QueryObject
-import play.api.libs.json.Json
-import akka.stream.Materializer
+
+
 
 
 
 @RunWith(classOf[JUnitRunner])
-class EnforcementEngineTest extends PlaySpec with ScalaFutures with MockitoSugar {
+class EnforcementEngineTest extends PlaySpecification with Results {
 
 //    val injector = new GuiceInjectorBuilder()
 //    .overrides(bind[MessagesApi].toInstance(messagesApi))
@@ -45,6 +34,24 @@ class EnforcementEngineTest extends PlaySpec with ScalaFutures with MockitoSugar
 //      
 //    }
     
+  "Application" should {
+  "be reachable" in new WithServer {
+    val response = await(WS.url("http://localhost:9000/docs").get()) //1
+
+    response.status must equalTo(OK) //2
+    response.body must contain("Semaphore Community Library") //3
+  }
+}
+  
+  "Example Page#index" should {
+    "be valid" in {
+      val controller = new EnforcementEngine(Helpers.stubControllerComponents())
+      val result: Future[Result] = controller.index().apply(FakeRequest())
+      val bodyText: String = contentAsString(result)
+      bodyText must be equalTo "ok"
+    }
+  }  
+  
     "respond to the index Action" in new WithApplication {
     val app: Application = GuiceApplicationBuilder().build()
     val messagesApi = app.injector.instanceOf[MessagesApi]
