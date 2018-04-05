@@ -2,13 +2,11 @@ package controllers
 
 import javax.inject.Inject
 
-import bootstrap.Init
 import io.swagger.annotations._
 import models.QueryObject
-import play.api.{Configuration, Logger}
+import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
-import play.mvc.BodyParser
 
 import scala.concurrent.Future
 
