@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import io.swagger.annotations._
-import models.QueryObject
+import models.{QueryObject, ResponseQuery}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -35,7 +35,8 @@ class EnforcementEngine @Inject() () extends InjectedController {
     val blueprintId = queryObject.blueprintId
       Logger.info(s"Received query: $query, for purpose: $purpose, blueprintId: $blueprintId")
       var newQuery = query
-      Future.successful(Ok(Json.toJson(newQuery)))
+      val response = new ResponseQuery(newQuery)
+      Future.successful(Ok(Json.toJson(response)))
     
   }
 

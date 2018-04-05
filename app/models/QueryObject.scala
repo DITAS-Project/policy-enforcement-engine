@@ -1,10 +1,7 @@
 package models
 
 import io.swagger.annotations._
-import play.api.mvc.{ Action, BodyParsers, Controller }
-import play.api.libs.json.Json
-import play.api.libs.json.Writes
-import play.api.libs.json.Reads
+import play.api.libs.json.{Json, Reads, Writes}
 
 
 object QueryObject {
