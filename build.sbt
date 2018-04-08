@@ -7,22 +7,24 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= {
- 	Seq(
-  		jdbc,
-  		ehcache,
-  		ws,
-                "com.typesafe.play" %% "play-json" % "2.6.9",
-  		"org.webjars" % "bootstrap" % "4.0.0-2",
-                "io.swagger" %% "swagger-play2" % "1.6.0",
-                "org.webjars" %% "webjars-play" % "2.6.3",
-                "org.webjars" % "swagger-ui" % "3.13.0",
-  		"com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B4",
-                "org.codehaus.janino" % "janino" % "3.0.8",
-                guice,
-                specs2 % Test
-	)
+  Seq(
+    jdbc,
+    ehcache,
+    ws,
+    "com.typesafe.play" %% "play-json" % "2.6.9",
+    "org.webjars" % "bootstrap" % "4.0.0-2",
+    "io.swagger" %% "swagger-play2" % "1.6.0",
+    "org.webjars" %% "webjars-play" % "2.6.3",
+    "org.webjars" % "swagger-ui" % "3.13.0",
+    "com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B4",
+    "org.codehaus.janino" % "janino" % "3.0.8",
+    guice,
+    specs2 % Test
+  )
 }
-libraryDependencies ~= { _.map(_.exclude("org.slf4j", "slf4j-log4j12")) }
+libraryDependencies ~= {
+  _.map(_.exclude("org.slf4j", "slf4j-log4j12"))
+}
 
 
 mainClass in assembly := Some("play.core.server.ProdServerStart")
@@ -48,7 +50,7 @@ enablePlugins(sbtdocker.DockerPlugin, JavaServerAppPackaging)
 
 
 dockerfile in docker := {
-    // The assembly task generates a fat JAR file
+  // The assembly task generates a fat JAR file
   val artifact: File = assembly.value
   val artifactTargetPath = s"/app/${artifact.name}"
 

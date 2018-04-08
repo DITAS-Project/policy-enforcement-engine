@@ -1,7 +1,7 @@
 import javax.inject.Inject
 
 import controllers.EnforcementEngine
-import models.{QueryObject, ResponseQuery}
+import models.{RequestQuery, ResponseQuery}
 import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.test._
@@ -31,8 +31,8 @@ class EnforcementEngineTest extends PlaySpecification with Results  {
   "Query Rewrite" should {
     "be valid" in {
       val query = "query"
-      val queryObject = new QueryObject(query, "purpose", "requester", "blueprint")
-      val request: FakeRequest[QueryObject] =  FakeRequest().withBody(queryObject)
+      val queryObject = new RequestQuery(query, "purpose", "requester", "blueprint")
+      val request: FakeRequest[RequestQuery] =  FakeRequest().withBody(queryObject)
       val result: Future[Result] = controller.rewriteSQLQuery()(request)
       status(result) must equalTo(OK)
       contentType(result) must equalTo(Some("application/json"))

@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import io.swagger.annotations._
-import models.{QueryObject, ResponseQuery}
+import models.{RequestQuery, ResponseQuery}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -27,7 +27,7 @@ class EnforcementEngine @Inject() () extends InjectedController {
   @ApiResponses(Array(
      new ApiResponse(code=400, message="Invalid parameters supplied"),
      new ApiResponse(code=404, message="Access purpose not found")))
-  def rewriteSQLQuery = Action.async(parse.json[QueryObject]) { request =>
+  def rewriteSQLQuery = Action.async(parse.json[RequestQuery]) { request =>
   
     val queryObject = request.body
     val query = queryObject.query
@@ -40,11 +40,6 @@ class EnforcementEngine @Inject() () extends InjectedController {
     
   }
 
-def redirectDocs = Action {
-  Redirect(url = "/web/public/main/lib/swagger-ui/index.html", queryString = Map("url" -> Seq("/swagger.json")))
-// Redirect("/assets/lib/swagger-ui/index.html?/url=/swagger.json")
-}
-  
 }
 
 

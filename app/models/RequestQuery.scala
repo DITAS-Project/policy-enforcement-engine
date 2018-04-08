@@ -4,14 +4,14 @@ import io.swagger.annotations._
 import play.api.libs.json.{Json, Reads, Writes}
 
 
-object QueryObject {
+object RequestQuery {
   //  implicit val queryObjectFormat = Json.format[QueryObject]
-  implicit val queryObjectWrites: Writes[QueryObject] = Json.writes[QueryObject]
-  implicit val queryObjectReads: Reads[QueryObject] = Json.reads[QueryObject]
+  implicit val requestQueryWrites: Writes[RequestQuery] = Json.writes[RequestQuery]
+  implicit val requestQueryReads: Reads[RequestQuery] = Json.reads[RequestQuery]
 }
 
 
-case class QueryObject(
+case class RequestQuery(
   @ApiModelProperty(value="SQL query") query:       String,
   @ApiModelProperty(value="Access purpose") purpose:     String,
   @ApiModelProperty(value="RequestorId") requester:   String,
