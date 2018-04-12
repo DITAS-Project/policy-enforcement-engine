@@ -21,7 +21,7 @@ pipeline {
                 echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
-		//sh 'sbt test'
+		sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 test"
             }
 
             post {
@@ -32,11 +32,15 @@ pipeline {
             }
         }
 
-        stage('Docker Publish') {
-            agent any
+        stage('Docker Image Creation') {         
+            agent {
+	         dockerfile {
+	           filename 'Dockerfile.build'
+	         }
+	    }
             steps {
                 // Generate Jenkinsfile and prepare the artifact files.
-                sh "sbt docker"
+                sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 docker"
 
                 // Run the Docker tool to build the image
                 script {
@@ -46,19 +50,8 @@ pipeline {
                 }
             }
         }
-        stage('Image deploy') {
-            // TO-DO avoid downloading the source from git again, not neccessary
-            agent any
-            steps {
-                echo 'to-do'
-                // Staging environment: 31.171.247.162
-                // Private key for ssh: /opt/keypairs/ditas-testbed-keypair.pem
-                // Call the deployment script
-                sh './jenkins/scripts/deploy-staging.sh'
-            }
-        }        
         
-        stage('Image creation') {
+        stage('Docker Publish') {
             agent any
             steps {
                 // The Dockerfile.artifact copies the code into the image and run the jar generation.
