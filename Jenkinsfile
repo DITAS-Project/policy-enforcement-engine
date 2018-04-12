@@ -1,15 +1,34 @@
 pipeline {
-    agent any
+    agent none
 
     stages {
+
         stage('Build') {
+           agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                 }
+           }
             steps {
                 echo "Compiling..."
-                sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt compile"
+                sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt assembly"
+                // Lets make the JAR available from the artifacts tab in Jenkins
+                archiveArtifacts 'target/scala-2.11/*.jar'
+
+                // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
+		sh '${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt test'
+            }
+
+            post {
+                always {
+                    // Record the jUnit test
+                    junit 'target/test-reports/*.xml'
+                }
             }
         }
 
         stage('Docker Publish') {
+            agent any
             steps {
                 // Generate Jenkinsfile and prepare the artifact files.
                 sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt docker"
@@ -40,7 +59,7 @@ pipeline {
                 // The Dockerfile.artifact copies the code into the image and run the jar generation.
                 echo 'Creating the image...'
                 // This will search for a Dockerfile.artifact in the working directory and build the image to the local repository
-                sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f target/docker/Dockerfile.artifact ."
+                sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f target/docker/Dockerfile ."
                 echo "Done"
                 echo 'Retrieving Docker Hub password from /opt/ditas-docker-hub.passwd...'
                 // Get the password from a file. This reads the file from the host, not the container. Slaves already have the password in there.
