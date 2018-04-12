@@ -9,8 +9,13 @@ RUN dpkg -i sbt-$SBT_VERSION.deb
 RUN wget https://downloads.typesafe.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.deb
 RUN dpkg -i scala-$SCALA_VERSION.deb
 # fetch base dependencies
-RUN sbt compile
-VOLUME /src
-WORKDIR /src
-CMD ["sbt"]
 
+# As this is an image for building, the compilation should be a sste {} in the pipeline.
+#RUN sbt compile
+
+# Jenkins generates the image and runs the container from this Dockerfile.
+# On the run command, it sets the WORKDIR to the VOLUME where the code is located, so this is not needeed.
+#VOLUME /src
+#WORKDIR /src
+
+CMD ["sbt"]
