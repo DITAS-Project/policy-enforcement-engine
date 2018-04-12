@@ -11,7 +11,7 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
-                sh "sbt assembly"
+                sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 assembly"
                 echo "Done."
 		    
                 // Lets make the JAR available from the artifacts tab in Jenkins
