@@ -1,6 +1,6 @@
 FROM java:latest
-ENV SCALA_VERSION 2.11.7
-ENV SBT_VERSION 0.13.15
+ENV SCALA_VERSION 2.12.4
+ENV SBT_VERSION 1.1.2
 ENV SBT_OPTS -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT
 # install sbt
 RUN wget https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb
