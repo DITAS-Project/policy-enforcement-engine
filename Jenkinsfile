@@ -11,12 +11,12 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
-                sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt assembly"
+                sh "sbt assembly"
                 // Lets make the JAR available from the artifacts tab in Jenkins
                 archiveArtifacts 'target/scala-2.11/*.jar'
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
-		sh '${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt test'
+		sh 'sbt test'
             }
 
             post {
@@ -31,7 +31,7 @@ pipeline {
             agent any
             steps {
                 // Generate Jenkinsfile and prepare the artifact files.
-                sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt docker"
+                sh "sbt docker"
 
                 // Run the Docker tool to build the image
                 script {
