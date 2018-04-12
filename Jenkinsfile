@@ -41,22 +41,8 @@ pipeline {
             steps {
                 // Generate Jenkinsfile and prepare the artifact files.
                 sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 docker"
-
-                // Run the Docker tool to build the image
-                script {
-                    docker.withTool('docker') {
-                        docker.build('policy-enforcement-engine:latest', 'target/docker/')
-                    }
-                }
-            }
-        }
-        
-        stage('Docker Publish') {
-            agent any
-            steps {
-                // The Dockerfile.artifact copies the code into the image and run the jar generation.
                 echo 'Creating the image...'
-                // This will search for a Dockerfile.artifact in the working directory and build the image to the local repository
+                // This will search for the Dockerfile in the target directory and build the image to the local repository
                 sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f target/docker/Dockerfile ."
                 echo "Done"
                 echo 'Retrieving Docker Hub password from /opt/ditas-docker-hub.passwd...'
