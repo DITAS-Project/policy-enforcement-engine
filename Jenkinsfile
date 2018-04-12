@@ -12,11 +12,16 @@ pipeline {
             steps {
                 echo "Compiling..."
                 sh "sbt assembly"
+                echo "Done."
+		    
                 // Lets make the JAR available from the artifacts tab in Jenkins
+		    
+                echo "Archiving artifacts..."
                 archiveArtifacts 'target/scala-2.11/*.jar'
+                echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
-		sh 'sbt test'
+		//sh 'sbt test'
             }
 
             post {
