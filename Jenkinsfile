@@ -36,7 +36,7 @@ pipeline {
             agent any
             steps {
                 // Generate Jenkinsfile and prepare the artifact files.
-                sh "sbt docker"
+                sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 docker"
 
                 // Run the Docker tool to build the image
                 script {
