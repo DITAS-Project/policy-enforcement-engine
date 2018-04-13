@@ -43,6 +43,8 @@ pipeline {
                 // sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 docker"
 		echo 'Building and pushing'
 		sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 dockerBuildAndPush"
+		    
+		// The following code is not necessary as "dockerBuildAndPush" should do all the work 
 		/*
                 echo 'Creating the image...'
                 // This will search for the Dockerfile in the target directory and build the image to the local repository
