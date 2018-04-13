@@ -53,7 +53,7 @@ dockerfile in docker := {
   // The assembly task generates a fat JAR file
   val artifact: File = assembly.value
   //val artifactTargetPath = s"/app/${artifact.name}"
-  val artifactTargetPath = s"/target/scala-2.11/"
+  val artifactTargetPath = s"/target/scala-2.12/"
 
   new Dockerfile {
     from("java:8-jre-alpine")
