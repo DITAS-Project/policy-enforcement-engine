@@ -40,7 +40,10 @@ pipeline {
 	    }
             steps {
                 // Generate Jenkinsfile and prepare the artifact files.
-                sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 docker"
+                // sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 docker"
+		echo 'Building and pushing'
+		sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 dockerBuildAndPush"
+		/*
                 echo 'Creating the image...'
                 // This will search for the Dockerfile in the target directory and build the image to the local repository
                 sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f target/docker/Dockerfile ."
@@ -56,7 +59,8 @@ pipeline {
                 echo "Done"
                 echo "Pushing the image ditas/policy-enforcement-engine:latest..."
                 sh "docker push ditas/policy-enforcement-engine:latest"
-                echo "Done"
+		*/
+                echo "Done(FIN)"
             }
        }        
     }
