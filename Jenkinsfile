@@ -17,7 +17,7 @@ pipeline {
                 // Lets make the JAR available from the artifacts tab in Jenkins
 		    
                 echo "Archiving artifacts..."
-                archiveArtifacts 'target/scala-2.11/*.jar'
+                archiveArtifacts 'target/scala-2.12/*.jar'
                 echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
