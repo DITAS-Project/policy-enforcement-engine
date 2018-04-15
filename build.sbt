@@ -52,8 +52,7 @@ enablePlugins(sbtdocker.DockerPlugin, JavaServerAppPackaging)
 dockerfile in docker := {
   // The assembly task generates a fat JAR file
   val artifact: File = assembly.value
-  //val artifactTargetPath = s"/app/${artifact.name}"
-  val artifactTargetPath = s"/target/scala-2.12/"
+  val artifactTargetPath = s"/app/${artifact.name}"
 
   new Dockerfile {
     from("java:8-jre-alpine")
