@@ -7,7 +7,7 @@ pipeline {
            agent {
                 dockerfile {
                     filename 'Dockerfile.build'
-		    args '-v $HOME/.sbt:/root/.sbt -v $HOME/.ivy2:/root/.ivy2'
+		    args '-v /home/cloudsigma/jencache/.sbt:/root/.sbt -v /home/cloudsigma/jencache/.ivy2:/root/.ivy2'
                  }
            }
             steps {
