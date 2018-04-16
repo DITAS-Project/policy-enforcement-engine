@@ -33,41 +33,6 @@ pipeline {
             }
         }
 
-pipeline {
-    agent none
-
-    stages {
-
-        stage('Build') {
-           agent {
-                dockerfile {
-                    filename 'Dockerfile.build'
-		    //args '-v /home/cloudsigma/jencache/.sbt:/root/.sbt -v /home/cloudsigma/jencache/.ivy2:/root/.ivy2'
-                 }
-           }
-            steps {
-                echo "Compiling..."
-                sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
-                echo "Done."
-		    
-                // Lets make the JAR available from the artifacts tab in Jenkins
-		    
-                echo "Archiving artifacts..."
-                archiveArtifacts 'target/scala-2.12/*.jar'
-                echo "Done."
-
-                // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
-		sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 test"
-            }
-
-            post {
-                always {
-                    // Record the jUnit test
-                    junit 'target/test-reports/*.xml'
-                }
-            }
-        }
-
 
          stage('Image creation') {
             agent any
