@@ -20,7 +20,7 @@ class EnforcementEngine @Inject() () extends InjectedController {
       new ApiImplicitParam(
           value = "Rewrite SQL query with enforcement options",
           required = true,
-          dataType = "models.QueryObject",
+          dataType = "models.ResponseQuery",
           paramType="body"
           )
       ))

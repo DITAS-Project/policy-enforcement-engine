@@ -5,7 +5,6 @@ import play.api.libs.json.{Json, Reads, Writes}
 
 
 object RequestQuery {
-  //  implicit val queryObjectFormat = Json.format[QueryObject]
   implicit val requestQueryWrites: Writes[RequestQuery] = Json.writes[RequestQuery]
   implicit val requestQueryReads: Reads[RequestQuery] = Json.reads[RequestQuery]
 }
