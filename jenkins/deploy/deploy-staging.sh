@@ -9,5 +9,5 @@ ssh -i /opt/keypairs/ditas-testbed-keypair.pem cloudsigma@31.171.247.162 << 'END
 # || true - "docker stop" failt with exit status 1 if image doen't exists, what makes the Pipeline fail. the "|| true" forces the command to exit with 0.
 sudo docker rm -f policy-enforcement-engine || true
 sudo docker pull ditas/policy-enforcement-engine:latest
-sudo docker run -d --name policy-enforcement-engine ditas/policy-enforcement-engine:latest
+sudo docker run -p 9000:9000 -d --name policy-enforcement-engine ditas/policy-enforcement-engine:latest
 ENDSSH
