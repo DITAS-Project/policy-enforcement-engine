@@ -12,7 +12,8 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
-                sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
+                //sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
+		sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 assembly"
                 echo "Done."
 		    
                 // Lets make the JAR available from the artifacts tab in Jenkins
@@ -22,7 +23,8 @@ pipeline {
                 echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
-		sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 test"
+		//sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 test"
+		sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 test"
             }
 
             post {
