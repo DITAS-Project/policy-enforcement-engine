@@ -55,7 +55,7 @@ pipeline {
         stage('Push image') {
             agent any
             options {
-                // Already compiled the WAR, so don't checkout againg (checkout also cleans the workspace, removing any generated artifact)
+                // Already compiled the assembly, so don't checkout againg (checkout also cleans the workspace, removing any generated artifact)
                 skipDefaultCheckout true
             }
             steps {
@@ -76,16 +76,19 @@ pipeline {
             }
         }
 	stage('Image deploy') {
-		// TO-DO avoid downloading the source from git again, not neccessary
-		agent any
-		steps {
-			// Staging environment: 31.171.247.162
-			// Private key for ssh: /opt/keypairs/ditas-testbed-keypair.pem
-			// Call the deployment script
-			echo "Deploying..."
-			sh './jenkins/deploy/deploy-staging.sh'
-			echo "Deploy done!"
-		}
+	    agent any
+            options {
+                // skip checking out code again 
+                skipDefaultCheckout true
+            }
+	    steps {
+	       // Staging environment: 31.171.247.162
+    	       // Private key for ssh: /opt/keypairs/ditas-testbed-keypair.pem
+	 	// Call the deployment script
+		echo "Deploying..."
+		sh './jenkins/deploy/deploy-staging.sh'
+		echo "Deploy done!"
+	   }
 	}
     }
 }
