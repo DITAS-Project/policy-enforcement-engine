@@ -15,12 +15,15 @@ import scala.concurrent.Future
 class EnforcementEngine @Inject() () extends InjectedController {
 
 
-  // TODO add request and requester attributes
+  @ApiOperation(nickname = "rewriteSQLQuery",
+    value = "Rewrite SQL query with enforcement options",
+    notes = "",
+    response = classOf[models.ResponseQuery], responseContainer = "List", httpMethod = "POST")
   @ApiImplicitParams(Array(
       new ApiImplicitParam(
-          value = "Rewrite SQL query with enforcement options",
+          value = "Request query",
           required = true,
-          dataType = "models.ResponseQuery",
+          dataType = "models.RequestQuery",
           paramType="body"
           )
       ))
