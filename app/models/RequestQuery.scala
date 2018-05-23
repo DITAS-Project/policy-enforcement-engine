@@ -11,8 +11,8 @@ object RequestQuery {
 
 
 case class RequestQuery(
-  @ApiModelProperty(value="SQL query") query:       String,
-  @ApiModelProperty(value="Access purpose") purpose:     String,
+  @ApiModelProperty(value="SQL query", example="SELECT name FROM data") query:       String,
+  @ApiModelProperty(value="Access purpose", example="NutritionConsultation") purpose:     String,
   @ApiModelProperty(value="RequestorId") requester:   String,
   @ApiModelProperty(value="VDC Blueprint ID") blueprintId: String) 
 

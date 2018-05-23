@@ -1,0 +1,64 @@
+swagger: '2.0'
+info:
+  description: Policy Enforcement Engine
+  version: "1.0.2"
+  title: Policy Enforcement Engine
+  contact:
+    name: ''
+  license:
+    name: 'Apache License, Version 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+basePath: /
+tags:
+  - name: Enforcement Engine
+paths:
+  /rewrite-sql-query:
+    post:
+      tags:
+        - Enforcement Engine
+      summary: Rewrite SQL query with enforcement options
+      description: ''
+      operationId: rewriteSQLQuery
+      parameters:
+        - in: body
+          name: body
+          description: Request query
+          required: true
+          schema:
+            $ref: '#/definitions/RequestQuery'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ResponseQuery'
+        '400':
+          description: Invalid parameters supplied
+        '404':
+          description: Access purpose not found
+definitions:
+  ResponseQuery:
+    type: object
+    properties:
+      query:
+        type: string
+        example: SELECT name FROM data WHERE age > 18
+        description: SQL query
+  RequestQuery:
+    type: object
+    properties:
+      query:
+        type: string
+        example: SELECT name FROM data
+        description: SQL query
+      purpose:
+        type: string
+        example: NutritionConsultation
+        description: Access purpose
+      requester:
+        type: string
+        description: RequestorId
+      blueprintId:
+        type: string
+        description: VDC Blueprint ID

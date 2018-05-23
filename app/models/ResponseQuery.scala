@@ -10,5 +10,5 @@ object ResponseQuery {
 
 
 case class ResponseQuery(
-                        @ApiModelProperty(value="SQL query") query:       String)
+                        @ApiModelProperty(value="SQL query", example="SELECT name FROM data WHERE age > 18") query:       String)
 
