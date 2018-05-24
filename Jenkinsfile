@@ -43,6 +43,7 @@ pipeline {
                 skipDefaultCheckout true
             } 
             steps {
+                sh "cp /home/cloudsigma/configurations/ehealth-sample-spark-vdc/.application.conf conf/application.conf"
                 echo 'Creating the image...'
                 archiveArtifacts 'Dockerfile.artifact'
                 sh "which docker"
