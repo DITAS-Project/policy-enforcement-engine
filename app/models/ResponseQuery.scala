@@ -10,5 +10,5 @@ object ResponseQuery {
 
 
 case class ResponseQuery(
-                        @ApiModelProperty(value="SQL query", example="SELECT name FROM data WHERE age > 18") query:       String)
+                          @ApiModelProperty(value="json containing the result", example="[{patientId:1,cholesterol:242.0,wbc:7610]") result:       String)
 
