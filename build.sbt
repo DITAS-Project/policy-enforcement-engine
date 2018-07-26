@@ -30,6 +30,7 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest" % "3.0.5" % Test,
     // https://mvnrepository.com/artifact/com.google.guava/guava
     "com.google.guava" % "guava" % "14.0.1",
+    "javax.servlet" % "servlet-api" % "2.5",
 
       specs2 % Test
   )
