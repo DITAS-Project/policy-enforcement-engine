@@ -1,5 +1,12 @@
 FROM java:8-jre-alpine
-COPY target/scala-2.12/policy-enforcement-engine-assembly-1.0-SNAPSHOT.jar /app/policy-enforcement-engine-assembly-1.0-SNAPSHOT.jar
-EXPOSE 9000
-ENTRYPOINT ["java", "-Dplay.http.secret.key='wspl4r'", "-jar", "\/app\/policy-enforcement-engine-assembly-1.0-SNAPSHOT.jar"]
+COPY target/universal/ehealth-sample-spark-vdc-1.0-SNAPSHOT.tgz app/ehealth-sample-spark-vdc-1.0-SNAPSHOT.tgz
+EXPOSE 9000 
+RUN apk --update add tar
+RUN ["tar", "xvzf", "app/policy-enforcement-engine-1.0-SNAPSHOT.tgz", "-C", "app"]
+COPY .application.conf app/policy-enforcement-engine-1.0-SNAPSHOT/conf/application.conf
+COPY .preprocessing-DITAS.yml app/policy-enforcement-engine-1.0-SNAPSHOT/conf/
+COPY 
+COPY .preprocessing-spark-1.0-SNAPSHOT-jar-with-dependencies.jar app/policy-enforcement-engine-1.0-SNAPSHOT/lib/
+COPY .demo-sparksql-1.0-SNAPSHOT-jar-with-dependencies.jar app/policy-enforcement-engine-1.0-SNAPSHOT/lib/
+//ENTRYPOINT ["app/policy-enforcement-engine-1.0-SNAPSHOT/bin/ehealth-sample-spark-vdc",  "-Dplay.http.secret.key='wspl4r'", "-Dconfig.file='app/policy-enforcement-engine-1.0-SNAPSHOT/conf/application.conf'"]
 

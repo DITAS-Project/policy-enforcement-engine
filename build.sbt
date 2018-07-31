@@ -4,9 +4,11 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= {
+  val sparkVersion = "2.3.0"
+  val hadoopVersion = "2.8.2"
   Seq(
     jdbc,
     ehcache,
@@ -19,11 +21,25 @@ libraryDependencies ++= {
     "com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B4",
     "org.codehaus.janino" % "janino" % "3.0.8",
     guice,
-    specs2 % Test
+    "org.apache.hadoop" % "hadoop-client" % hadoopVersion,
+    "org.apache.spark" % "spark-core_2.11" % sparkVersion exclude("org.apache.hadoop","hadoop-client"),
+    "org.apache.spark" % "spark-sql_2.11" % sparkVersion,
+    "org.apache.hadoop" % "hadoop-aws" % hadoopVersion,
+    "com.amazonaws" % "aws-java-sdk-bundle" % "1.11.234",
+    "mysql" % "mysql-connector-java" % "6.0.6",
+    "org.scalatest" %% "scalatest" % "3.0.5" % Test,
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    "com.google.guava" % "guava" % "14.0.1",
+    "javax.servlet" % "servlet-api" % "2.5",
+
+      specs2 % Test
   )
 }
 libraryDependencies ~= {
   _.map(_.exclude("org.slf4j", "slf4j-log4j12"))
+}
+libraryDependencies ~= {
+  _.map(_.exclude("org.slf4j", "impl.SimpleLoggerFactory"))
 }
 
 
