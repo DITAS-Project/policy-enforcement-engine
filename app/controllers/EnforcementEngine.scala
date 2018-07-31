@@ -26,7 +26,7 @@ class EnforcementEngine @Inject() (config: Configuration) extends InjectedContro
     println (queryObject.asText)
     var configPath: String = null
     var result: Boolean = false;
-    if (config.has("enforcmentEngine.preprocessing.configPath")) {
+    if (config != null && config.has("enforcmentEngine.preprocessing.configPath")) {
       configPath = config.get[String]("enforcmentEngine.preprocessing.configPath")
       try {
         //result = com.ibm.research.storage.policy.enforcement.preprocessing.spark.PreProcessing.doPreprocessing(configPath)
@@ -70,7 +70,8 @@ class EnforcementEngine @Inject() (config: Configuration) extends InjectedContro
     var configPath:String = null
 
     var result: String = ""
-    if (config.has("enforcmentEngine.runtime.configPath")) {
+
+    if (config != null && config.has("enforcmentEngine.runtime.configPath")) {
       configPath = config.get[String]("enforcmentEngine.runtime.configPath")
       val accessType = queryObject.access
       val blueprintId = queryObject.blueprintId
