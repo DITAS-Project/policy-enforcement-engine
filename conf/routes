@@ -11,3 +11,4 @@ GET	/docs/*file	controllers.Assets.at(path="/public/lib/swagger-ui/", file)
 
 POST	/get-compliant-result	controllers.EnforcementEngine.getCompliantDataResult
 POST	/pre-processing	controllers.EnforcementEngine.doPreProcessing
+POST	/get-new-query	controllers.EnforcementEngine.getRewrittenQuery

@@ -20,5 +20,3 @@ class Init @Inject() (lifecycle: ApplicationLifecycle, config: Configuration) {
   }
 
 }
-
-
