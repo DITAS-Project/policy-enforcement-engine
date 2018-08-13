@@ -84,7 +84,6 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       if (config.has("enforcmentEngine.runtime.configFullPath"))
         try{
           result = com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.getCompliantResult(configFullPath,purpose, accessType, query, "requester.id", requesterId)
-          //result = "OK"
         }catch {
           case e: Exception => result = ""
         }
@@ -92,7 +91,6 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       if (result.equals(""))
         Future.successful(BadRequest("run time phase failed"))
       else {
-        //Future.successful(Ok(Json.toJson(response)))
         Future.successful(Ok(Json.toJson(result)))
       }
     } else {
