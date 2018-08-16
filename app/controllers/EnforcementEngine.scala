@@ -119,7 +119,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       //lazy
       if (config.has("enforcmentEngine.runtime.configFullPath"))
         try{
-          result = com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.getNewQuary(configFullPath,purpose, accessType, query, "requester.id", requesterId)
+          result = com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.getNewQuery(spark, configFullPath,purpose, accessType, query, "requester.id", requesterId)
           //result = "OK"
         }catch {
           case e: Exception => result = ""
