@@ -116,6 +116,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       val accessType = queryObject.access
       val blueprintId = queryObject.blueprintId
       Logger.info(s"Received query: $query, for purpose: $purpose, blueprintId: $blueprintId")
+      val spark = initService.getSparkSessionInstance
       //lazy
       if (config.has("enforcmentEngine.runtime.configFullPath"))
         try{
