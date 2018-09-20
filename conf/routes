@@ -10,5 +10,4 @@ GET	/docs/*file	controllers.Assets.at(path="/public/lib/swagger-ui/", file)
 # GET     /locations/json       controllers.ApplicationController.index
 
 POST	/get-compliant-result	controllers.EnforcementEngine.getCompliantDataResult
-POST	/pre-processing	controllers.EnforcementEngine.doPreProcessing
 POST	/get-new-query	controllers.EnforcementEngine.getRewrittenQuery
