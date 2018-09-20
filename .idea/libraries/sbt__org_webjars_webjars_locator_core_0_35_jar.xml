@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.webjars:webjars-locator-core:0.35:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.webjars/webjars-locator-core/jars/webjars-locator-core-0.35.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.webjars/webjars-locator-core/srcs/webjars-locator-core-0.35-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
