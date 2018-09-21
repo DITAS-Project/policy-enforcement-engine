@@ -8,32 +8,29 @@ import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import play.api.Configuration
 import play.api.libs.json.Json
-
+import bootstrap.Init
 import scala.concurrent.Future
 
 @RunWith(classOf[JUnitRunner])
 class EnforcementEngineTest extends PlaySpecification with Results  {
   val config: Configuration = null
+  val initService: Init = null
 
 
   private def controller = {
-    new EnforcementEngine(config) {
+    new EnforcementEngine(null, null) {
       override def controllerComponents: ControllerComponents = Helpers.stubControllerComponents()
     }
   }
 
 
   "Query Rewrite" should {
-    "be valid" in {
+    "fail as there is no config file" in {
       val query = "query"
       val queryObject = new RequestQuery(query, "", "", "", "")
       val request: FakeRequest[RequestQuery] =  FakeRequest().withBody(queryObject)
       val result: Future[Result] = controller.getCompliantDataResult(request)
       status(result) must equalTo(NOT_FOUND)
-      //contentType(result) must equalTo(Some("application/json"))
-      //val expectedJson = Json.toJson(ResponseQuery(query))
-      //contentAsJson(result) must equalTo(expectedJson)
-
     }
   }
 }
