@@ -29,9 +29,8 @@ libraryDependencies ++= {
     "mysql" % "mysql-connector-java" % "6.0.6",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test,
     // https://mvnrepository.com/artifact/com.google.guava/guava
-    "com.google.guava" % "guava" % "14.0.1",
+    //"com.google.guava" % "guava" % "14.0.1",
     "javax.servlet" % "servlet-api" % "2.5",
-
       specs2 % Test
   )
 }
@@ -41,6 +40,8 @@ libraryDependencies ~= {
 libraryDependencies ~= {
   _.map(_.exclude("org.slf4j", "impl.SimpleLoggerFactory"))
 }
+
+
 
 
 mainClass in assembly := Some("play.core.server.ProdServerStart")
