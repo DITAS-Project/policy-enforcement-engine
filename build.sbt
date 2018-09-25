@@ -41,6 +41,8 @@ libraryDependencies ~= {
   _.map(_.exclude("org.slf4j", "impl.SimpleLoggerFactory"))
 }
 
+resolvers += Resolver.sbtPluginRepo("releases")
+
 
 
 
