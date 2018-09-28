@@ -6,4 +6,4 @@ RUN apk --update add tar
 RUN ["apk", "add", "--update", "bash", "libc6-compat", "curl"]
 RUN ["tar", "xvzf", "app/policy-enforcement-engine-1.0-SNAPSHOT.tgz", "-C", "app"]
 #ENTRYPOINT ["app/ehealth-sample-spark-vdc-1.0-SNAPSHOT/bin/ehealth-sample-spark-vdc",  "-Dplay.http.secret.key='wspl4r'", "-Dconfig.file='app/ehealth-sample-spark-vdc-1.0-SNAPSHOT/conf/application.conf'"]
-ENTRYPOINT ['/bin/bash']
+ENTRYPOINT ["bash"]
