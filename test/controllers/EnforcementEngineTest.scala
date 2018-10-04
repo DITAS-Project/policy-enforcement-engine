@@ -29,8 +29,8 @@ class EnforcementEngineTest extends PlaySpecification with Results  {
       val query = "query"
       val queryObject = new RequestQuery(query, "", "", "", "")
       val request: FakeRequest[RequestQuery] =  FakeRequest().withBody(queryObject)
-      val result: Future[Result] = controller.getCompliantDataResult(request)
-      status(result) must equalTo(NOT_FOUND)
+      val result: Future[Result] = controller.getRewrittenQuery(request)
+      status(result) must equalTo(BAD_REQUEST)
     }
   }
 }
