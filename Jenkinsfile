@@ -12,26 +12,25 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
-                sh "cd policy-enforcement-engine-api"
                 //sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
-                sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 universal:packageZipTarball"
+                sh "cd policy-enforcement-engine-api && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 universal:packageZipTarball"
                 echo "Done."
 		    
                 // Lets make the JAR available from the artifacts tab in Jenkins
 		    
                 echo "Archiving artifacts..."
-                archiveArtifacts 'target/universal/*.tgz'
+                archiveArtifacts 'policy-enforcement-engine-api/target/universal/*.tgz'
                 echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
 		//sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 test"
-		sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 test"
+		sh "cd policy-enforcement-engine-api && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 test"
             }
 
             post {
                 always {
                     // Record the jUnit test
-                    junit 'target/test-reports/*.xml'
+                    junit 'policy-enforcement-engine-api/target/test-reports/*.xml'
                 }
             }
         }
@@ -45,11 +44,11 @@ pipeline {
             } 
             steps {
                 echo 'Creating the image...'
-                archiveArtifacts 'Dockerfile.artifact'
+                archiveArtifacts 'policy-enforcement-engine-api/Dockerfile.artifact'
                 sh "which docker"
                 // This will search for a Dockerfile in the src folder and will build the image to the local repository
                 // Using latest tag to override tha newest image in the hub
-                sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f Dockerfile.artifact ."
+                sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f policy-enforcement-engine-api/Dockerfile.artifact policy-enforcement-engine-api"
                 echo "Done"
             }
         }
