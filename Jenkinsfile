@@ -6,12 +6,13 @@ pipeline {
         stage('Build') {
            agent {
                 dockerfile {
-                    filename 'Dockerfile.build'
+                    filename 'policy-enforcement-engine-api/Dockerfile.build'
 		    //args '-v /home/cloudsigma/jencache/.sbt:/root/.sbt -v /home/cloudsigma/jencache/.ivy2:/root/.ivy2'
                  }
            }
             steps {
                 echo "Compiling..."
+                sh "cd policy-enforcement-engine-api"
                 //sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
                 sh "sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 universal:packageZipTarball"
                 echo "Done."
