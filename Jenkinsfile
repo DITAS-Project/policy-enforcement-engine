@@ -86,7 +86,7 @@ pipeline {
     	       // Private key for ssh: /opt/keypairs/ditas-testbed-keypair.pem
 	 	// Call the deployment script
 		echo "Deploying..."
-		sh './jenkins/deploy/deploy-staging.sh'
+		sh 'policy-enforcement-engine-api/jenkins/deploy/deploy-staging.sh'
 		echo "Deploy done!"
 	   }
 	}
