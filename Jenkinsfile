@@ -12,6 +12,12 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
+
+                //First, create the dummy-policy-enforcement-engine jar file"
+              
+                sh "cd dummy-policy-enforcement-engine && mvn clean && mvn package"
+                sh "cp dummy-policy-enforcement-engine/demo-sparksql/target/demo-sparksql-1.0-SNAPSHOT.jar policy-enforcement-engine-api/lib/dummy_demosparksql_2.11-0.1.jar"
+                
                 //sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
                 sh "cd policy-enforcement-engine-api && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 universal:packageZipTarball"
                 echo "Done."
