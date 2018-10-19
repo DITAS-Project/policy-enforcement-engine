@@ -6,7 +6,7 @@
         <artifactId>root</artifactId>
         <groupId>com.ibm.research.storage.policy.enforcement</groupId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../parent/pom.xml</relativePath>
+        <relativePath>../parent/</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
