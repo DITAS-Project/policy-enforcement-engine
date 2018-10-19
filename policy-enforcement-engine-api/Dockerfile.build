@@ -24,8 +24,6 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
-COPY policy-enforcement-engine-api/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY policy-enforcement-engine-api/settings-docker.xml /usr/share/maven/ref/
 # fetch base dependencies
 
 # As this is an image for building, the compilation should be a sste {} in the pipeline.
@@ -35,5 +33,4 @@ COPY policy-enforcement-engine-api/settings-docker.xml /usr/share/maven/ref/
 # On the run command, it sets the WORKDIR to the VOLUME where the code is located, so this is not needeed.
 #VOLUME /src
 #WORKDIR /src
-#ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["sbt"]
