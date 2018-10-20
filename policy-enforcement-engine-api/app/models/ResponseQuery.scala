@@ -10,5 +10,7 @@ object ResponseQuery {
 
 
 case class ResponseQuery(
-                          @ApiModelProperty(value="json containing the result", example="[{patientId:1,cholesterol:242.0,wbc:7610]") result:       String)
+                          @ApiModelProperty(value="json containing the rewritten query and the list of tables needed to extract the compliant result",
+                                            example="{\"rewrittenQuery\":\"WITH blood_tests AS\",\"tables\":[{\"name\":\"blood_tests\"},{\"name\":\"blood_tests\"},{\"name\":\"consent\"}]")
+                                            result:       String)
 

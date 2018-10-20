@@ -9,4 +9,4 @@ GET	/docs/	controllers.Assets.at(path="/public/lib/swagger-ui/", file="index.htm
 GET	/docs/*file	controllers.Assets.at(path="/public/lib/swagger-ui/", file)
 # GET     /locations/json       controllers.ApplicationController.index
 
-POST	/get-new-query	controllers.EnforcementEngine.getRewrittenQuery
+POST	/rewrite-sql-query	controllers.EnforcementEngine.rewriteSQLQuery

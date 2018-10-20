@@ -5,7 +5,7 @@ import javax.inject.Inject
 import io.swagger.annotations._
 import models.{RequestQuery, ResponseQuery}
 import play.api.mvc._
-import play.api.libs.json.Json
+import play.api.libs.json._
 import play.api.{Configuration, Logger}
 import java.nio.file.Paths
 import org.slf4j.LoggerFactory
@@ -20,7 +20,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid parameters supplied"),
     new ApiResponse(code = 500, message = "Error processing result")))
-  def getRewrittenQuery = Action.async(parse.json[RequestQuery]) { request =>
+  def rewriteSQLQuery = Action.async(parse.json[RequestQuery]) { request =>
 
     val queryObject = request.body
     val query = queryObject.query
@@ -28,7 +28,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
     val requesterId = queryObject.requesterId
     var configFullPath:String = null
 
-    var result: String = ""
+    var result: com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.RewrittenQueryResponse = null
 
     if (config != null && config.has("enforcmentEngine.runtime.configFullPath")) {
       configFullPath = config.get[String]("enforcmentEngine.runtime.configFullPath")
@@ -36,21 +36,39 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       val blueprintId = queryObject.blueprintId
       Logger.info(s"Received query: $query, for purpose: $purpose, blueprintId: $blueprintId")
       val spark = initService.getSparkSessionInstance
-      //lazy
+
       if (config.has("enforcmentEngine.runtime.configFullPath"))
         try{
-          result = com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.getNewQuery(spark, configFullPath,purpose, accessType, query, "requester.id", requesterId)
-          //result = "OK"
+          result = com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.getNewQuery(spark,
+            configFullPath,purpose, accessType, query, "requester.id", requesterId)
         }catch {
-          case e: Exception => result = ""; LOGGER.error("Exception in engine " + e);
+          case e: Exception => result = null; LOGGER.error("Failed to rewrite the query", e);
         }
-      if (result.equals("")) //TODO: make the error message more informative
-        Future.successful(InternalServerError("Failure"))
+      if (result == null ||
+        result.rewrittenSQLquery == null ||
+        result.rewrittenSQLquery.equals("") ||
+        result.tableArray.length == 0)
+        Future.successful(InternalServerError("Failed to rewrite the query"))
       else {
-        println (result)
-        Future.successful(Ok(result))
+        LOGGER.info("EnforcementEngine succeed to rewrite the query!")
+        var responseStr: String = result.rewrittenSQLquery
+
+
+        val emptyArray = Json.arr()
+        var filledArray = emptyArray
+        for (table <- result.tableArray) {
+          val testObject:JsObject = Json.obj("name" -> table)
+          filledArray = filledArray :+ testObject
+        }
+        val jsonResult = Json.obj(
+          "rewrittenQuery" -> result.rewrittenSQLquery,
+          "tables" -> filledArray)
+        Json.prettyPrint(jsonResult)
+
+        Future.successful(Ok(jsonResult))
       }
     } else {
+      LOGGER.error("Missing config file, existing EnforcementEngine");
       Future.successful(BadRequest("Missing config file"))
     }
   }
