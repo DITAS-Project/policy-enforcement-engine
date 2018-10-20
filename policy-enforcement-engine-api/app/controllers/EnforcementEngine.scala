@@ -28,6 +28,8 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
     val requesterId = queryObject.requesterId
     var configFullPath:String = null
 
+    //RewrittenQueryResponse object which is the enforcement engine response contains the rewritten query
+    //and an array of tables names to apply the query on in order to get the compilant result.
     var result: com.ibm.research.storage.policy.enforcement.sql.runtime.SparkSqlRuntime.RewrittenQueryResponse = null
 
     if (config != null && config.has("enforcmentEngine.runtime.configFullPath")) {
@@ -51,9 +53,8 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         Future.successful(InternalServerError("Failed to rewrite the query"))
       else {
         LOGGER.info("EnforcementEngine succeed to rewrite the query!")
-        var responseStr: String = result.rewrittenSQLquery
 
-
+        //construct the json response
         val emptyArray = Json.arr()
         var filledArray = emptyArray
         for (table <- result.tableArray) {
