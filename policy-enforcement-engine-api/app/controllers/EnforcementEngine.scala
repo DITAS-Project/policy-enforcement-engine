@@ -3,13 +3,15 @@ package controllers
 import javax.inject.Inject
 
 import io.swagger.annotations._
-import models.{RequestQuery, ResponseQuery}
+import models.{RequestQuery, ResponseQuery, TableName}
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.{Configuration, Logger}
 import java.nio.file.Paths
 import org.slf4j.LoggerFactory
 import bootstrap.Init
+import scala.collection.mutable.ArrayBuffer
+
 
 import scala.concurrent.Future
 
@@ -17,6 +19,13 @@ import scala.concurrent.Future
 @Api("Enforcement Engine")
 class EnforcementEngine @Inject() (config: Configuration,  initService: Init) extends InjectedController {
   private val LOGGER = LoggerFactory.getLogger("EHealthVDCController")
+
+  @ApiOperation(nickname = "rewriteSQLQuery",
+    value = "Get rewritten SQL query and list of tables names to extract the compilant result from",
+    notes = "This method returns a json object which contains the rewritten SQL query and an array of table names",
+    response = classOf[models.ResponseQuery], httpMethod = "POST")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(value = "Request query", required = true, dataType = "models.RequestQuery", paramType="body")))
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid parameters supplied"),
     new ApiResponse(code = 500, message = "Error processing result")))
@@ -54,19 +63,15 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       else {
         LOGGER.info("EnforcementEngine succeed to rewrite the query!")
 
-        //construct the json response
-        val emptyArray = Json.arr()
-        var filledArray = emptyArray
+        //construct the response
+        val tables : ArrayBuffer[models.TableName] = new ArrayBuffer[models.TableName](result.tableArray.size)
         for (table <- result.tableArray) {
-          val testObject:JsObject = Json.obj("name" -> table)
-          filledArray = filledArray :+ testObject
+          val newTableName = new models.TableName (table)
+          tables += newTableName
         }
-        val jsonResult = Json.obj(
-          "rewrittenQuery" -> result.rewrittenSQLquery,
-          "tables" -> filledArray)
-        Json.prettyPrint(jsonResult)
+        val responseQuery: models.ResponseQuery = new models.ResponseQuery (result.rewrittenSQLquery, tables)
 
-        Future.successful(Ok(jsonResult))
+        Future.successful(Ok(Json.toJson(responseQuery)))
       }
     } else {
       LOGGER.error("Missing config file, existing EnforcementEngine");
