@@ -47,4 +47,5 @@ Example call:
 curl -X POST "http://<hostname>:9000/rewrite-sql-query" -H "accept: application/json" -H "Content-Type: application/json" --data {"query": "SELECT patientId, date, cholesterol.hdl.value FROM blood_tests", "purpose": "MedicalTreatment", "access": "read", "blueprintId": "2", "requesterId": "7bff1d74-e3f0-4188-8acb-905f06705e43"}
 ```
 
-See documentation at http://<hostname>:9000/docs/#/Enforcement\_Engine/rewriteSQLQuery
+Documentation:
+Go to http://<hostname>:9000/docs/ and paste the path to your swagger.json (http://<hostname>:9000/docs/swagger.json) in the text box.
