@@ -21,7 +21,7 @@ pipeline {
                 sh "cp policy-enforcement-engine-interface/target/policy-enforcement-engine-interface-1.0-SNAPSHOT.jar policy-enforcement-engine-api/lib/" 
 
                 //Create the dummy-policy-enforcement-engine jar file"              
-                sh "cd dummy-policy-enforcement-engine && sbt clean && sbt compile && sbt package"
+                sh "cd dummy-policy-enforcement-engine && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 compile && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 package"
                 sh "mkdir policy-enforcement-engine-api/lib/"
                 sh "cp dummy-policy-enforcement-engine/demo-sparksql/target/scala-2.12/dummy-policy-enforcement-engine_2.12-0.1.jar policy-enforcement-engine-api/lib/dummy_enforcement_engine.jar"
                 
