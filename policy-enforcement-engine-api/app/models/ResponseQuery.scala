@@ -28,7 +28,8 @@ object ResponseQuery {
   implicit val responseQueryReads: Reads[ResponseQuery] = Json.reads[ResponseQuery]
 }
 
-case class ResponseQuery(@ApiModelProperty(value="The rewritten query", dataType="String", example="WITH blood_tests AS...")
+case class ResponseQuery(@ApiModelProperty(value="The rewritten query", dataType="String",
+                         example="SELECT cholesterol from blood_tests WITH blood_tests AS...")
                          rewrittenQuery:       String,
                          @ApiModelProperty(value="The list of tables needed to extract the compliant result")
                          tables:       ArrayBuffer[TableName])
