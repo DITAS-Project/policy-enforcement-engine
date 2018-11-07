@@ -38,7 +38,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
   private val LOGGER = LoggerFactory.getLogger("EHealthVDCController")
 
   @ApiOperation(nickname = "rewriteSQLQuery",
-    value = "Get rewritten SQL query and list of tables names to extract the compilant result from",
+    value = "Get rewritten SQL query and list of tables names to extract the compilant result.",
     notes = "This method returns a json object which contains the rewritten SQL query and an array of table names",
     response = classOf[models.ResponseQuery], httpMethod = "POST")
   @ApiImplicitParams(Array(
