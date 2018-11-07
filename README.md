@@ -30,7 +30,7 @@ Returns a rewritten query and a set of corresponding data tables to retrieve the
   * **description**: Returns a rewritten query and a set of corresponding data tables to
     retrieve the compliant data. 
   * **caller** eHealth VDC
-  * **input**: Application requirements JSON file
+  * **input**: Application requirements JSON file which includes the access type, purpose, requesterId and blueprint number
   * **output**: JSON response as described above
 
 ## Installation
