@@ -49,7 +49,7 @@ tar xvfz policy-enforcement-engine-1.0.tgz
 
 ## Execution:
 
-The conf/reference.conf file provide defaults; they are overridden by any settings defined in the application.conf file. Please, copy the contents of the file conf/reference.conf to conf/application.conf and replace with the correct values of your runtime.
+The conf/reference.conf file provides default configuration parameters; they are overridden by any settings defined in the conf/application.conf file. Please, copy the contents of the file conf/reference.conf to conf/application.conf and replace with the correct values of your runtime.
 
 * Use the following command to run the application.
 
