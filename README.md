@@ -18,6 +18,7 @@ This is being developed for the DITAS Project: https://www.ditas-project.eu/
 ## policy-enforcement-engine
 
 Policy enforcement engine enforces data access policies when VDC accesses its data sources. 
+policy-enforcement-engine-api is a Play Framework application, which uses an enforcement engine that implements policy-enforcement-engine-interface.
 
 ## Description 
 
@@ -36,8 +37,16 @@ Returns a rewritten query and a set of corresponding data tables to retrieve the
 ## Installation
 Clone repository
 
+Create the policy-enforcement-interface with:
+```
+cd policy-enforcement-engine-interface
+mvn clean install
+```
+Create a lib folder inside policy-enforcement-engine-api, and put there a jar of implementation of the policy-enforcement-engine-interface.
+
 Create distribution with:
 ```
+cd policy-enforcement-engine-api
 sbt universal:packageZipTarball
 ```
 
@@ -54,7 +63,7 @@ The conf/reference.conf file provides default configuration parameters; they are
 * Use the following command to run the application.
 
 ```
-app/policy-enforcement-engine-1.0-SNAPSHOT/bin/policy-enforcement-engine  -Dplay.http.secret.key='your-secret' -Dconfig.file='\/conf\/application.conf'
+app/policy-enforcement-engine-1.0/bin/policy-enforcement-engine  -Dplay.http.secret.key='your-secret' -Dconfig.file='\/conf\/application.conf'
 ```
 
 * Example call:

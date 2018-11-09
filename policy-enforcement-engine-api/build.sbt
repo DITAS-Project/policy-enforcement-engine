@@ -1,15 +1,21 @@
 name := """policy-enforcement-engine"""
-
+organization := "com.ditas"
 version := "1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.7"
 
+resolvers += Resolver.mavenLocal
+
+
+
+
 libraryDependencies ++= {
   val sparkVersion = "2.3.0"
   val hadoopVersion = "2.8.2"
   Seq(
+    "com.ditas" % "policy-enforcement-engine-interface" % "1.0",
     jdbc,
     ehcache,
     ws,
@@ -28,8 +34,6 @@ libraryDependencies ++= {
     "com.amazonaws" % "aws-java-sdk-bundle" % "1.11.234",
     "mysql" % "mysql-connector-java" % "6.0.6",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test,
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-    //"com.google.guava" % "guava" % "14.0.1",
     "javax.servlet" % "servlet-api" % "2.5",
       specs2 % Test
   )
