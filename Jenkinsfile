@@ -13,7 +13,7 @@ pipeline {
             steps {
                 echo "Compiling..."
                 //First, install policy-enforcement-interface"
-                sh "cd policy-enforcement-engine-interface && mvn clean install"
+                sh "cd policy-enforcement-engine-interface && mvn clean install --settings /usr/share/maven/.m2/settings-docker.xml --global-settings /usr/share/maven/.m2/settings-docker.xml"
                 sh "mkdir policy-enforcement-engine-api/lib/"
 
                 //Create the dummy-policy-enforcement-engine jar file"              
