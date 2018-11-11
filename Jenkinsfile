@@ -12,7 +12,7 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
-                //First, create the policy-enforcement-interface jar file"
+                //First, install policy-enforcement-interface"
                 sh "cd policy-enforcement-engine-interface && mvn clean install"
                 sh "mkdir policy-enforcement-engine-api/lib/"
 
@@ -27,7 +27,7 @@ pipeline {
                 // Lets make the JAR available from the artifacts tab in Jenkins
 		    
                 echo "Archiving artifacts..."
-                archiveArtifacts 'policy-enforcement-engine-api/target/universal/*.tgz'
+                //archiveArtifacts 'policy-enforcement-engine-api/target/universal/*.tgz'
                 echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)
