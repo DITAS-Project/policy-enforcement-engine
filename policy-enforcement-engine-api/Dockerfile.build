@@ -26,8 +26,8 @@ RUN mkdir -p /usr/share/maven/.m2/repository/
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 # fetch base dependencies
-COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY settings-docker.xml /usr/share/maven/ref/
+COPY policy-enforcement-engine-api/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
+COPY policy-enforcement-engine-api/settings-docker.xml /usr/share/maven/ref/
 
 # As this is an image for building, the compilation should be a sste {} in the pipeline.
 #RUN sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 compile
