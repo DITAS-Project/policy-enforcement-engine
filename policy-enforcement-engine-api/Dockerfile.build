@@ -36,5 +36,6 @@ COPY policy-enforcement-engine-api/settings-docker.xml /usr/share/maven/ref/
 # On the run command, it sets the WORKDIR to the VOLUME where the code is located, so this is not needeed.
 #VOLUME /src
 #WORKDIR /src
-ENTRYPOINT ["sh", "/usr/local/bin/mvn-entrypoint.sh"]
+RUN chmod +x /usr/local/bin/mvn-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["mvn"]
