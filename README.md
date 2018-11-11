@@ -43,6 +43,7 @@ cd policy-enforcement-engine-interface
 mvn clean install
 ```
 Create a lib folder inside policy-enforcement-engine-api, and put there a jar of implementation of the policy-enforcement-engine-interface.
+dummy-policy-enforcement-engine/ folder can be used as an example for implementation of the policy-enforcement-engine-interface.
 
 Create distribution with:
 ```
