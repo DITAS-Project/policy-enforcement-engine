@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.12.7"
 
-resolvers += baseDirectory.value / .m2
+resolvers += /usr/share/maven/.m2/repository/ 
 
 
 libraryDependencies ++= Seq(
