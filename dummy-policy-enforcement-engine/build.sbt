@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.12.7"
 
-resolvers += /usr/share/maven/.m2/repository/ 
+resolvers += Resolver.mavenLocal 
 
 
 libraryDependencies ++= Seq(
