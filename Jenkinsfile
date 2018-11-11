@@ -13,7 +13,7 @@ pipeline {
             steps {
                 echo "Compiling..."
                 //First, install policy-enforcement-interface"
-                sh "cd policy-enforcement-engine-interface && mvn -Dmaven.repo.local=.m2 clean install "
+                sh "cd policy-enforcement-engine-interface && mvn -Dmaven.repo.local=/root/.m2 clean install "
                 sh "mkdir policy-enforcement-engine-api/lib/"
 
                 //Create the dummy-policy-enforcement-engine jar file"              
