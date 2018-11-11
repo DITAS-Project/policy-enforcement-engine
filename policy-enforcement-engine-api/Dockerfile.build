@@ -37,4 +37,4 @@ COPY policy-enforcement-engine-api/settings-docker.xml /usr/share/maven/ref/
 #VOLUME /src
 #WORKDIR /src
 ENTRYPOINT ["sh", "/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["sbt"]
+CMD ["mvn"]
