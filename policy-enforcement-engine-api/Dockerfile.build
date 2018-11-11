@@ -26,7 +26,7 @@ RUN mkdir -p /usr/share/maven/.m2/repository/
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 # fetch base dependencies
-RUN chmod 777 policy-enforcement-engine-api/mvn-entrypoint.sh
+#RUN chmod 777 policy-enforcement-engine-api/mvn-entrypoint.sh
 #COPY policy-enforcement-engine-api/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
 COPY policy-enforcement-engine-api/settings-docker.xml /usr/share/maven/ref/
 
