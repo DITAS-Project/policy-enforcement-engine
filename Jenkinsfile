@@ -12,22 +12,26 @@ pipeline {
            }
             steps {
                 echo "Compiling..."
-                //First, install policy-enforcement-interface"
-                sh "cd policy-enforcement-engine-interface && mvn clean install "
+                //First, create the policy-enforcement-interface jar file"
+                sh "cd policy-enforcement-engine-interface && mvn clean && mvn compile && mvn package"
+                //copy the jar
                 sh "mkdir policy-enforcement-engine-api/lib/"
+                sh "mkdir dummy-policy-enforcement-engine/lib/"
+                sh "cp policy-enforcement-engine-interface/target/policy-enforcement-engine-interface-1.0.jar dummy-policy-enforcement-engine/lib/"
+                sh "cp policy-enforcement-engine-interface/target/policy-enforcement-engine-interface-1.0.jar policy-enforcement-engine-api/lib/" 
 
                 //Create the dummy-policy-enforcement-engine jar file"              
-                sh "cd dummy-policy-enforcement-engine && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 package"
+                sh "cd dummy-policy-enforcement-engine && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 compile && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 package"
                 sh "cp dummy-policy-enforcement-engine/target/scala-2.12/dummy-policy-enforcement-engine_2.12-1.0.jar policy-enforcement-engine-api/lib/dummy_enforcement_engine.jar"
                 
                 //sh "sbt -Dsbt.global.base=/root/.sbt -Dsbt.boot.directory=/root/.sbt -Dsbt.ivy.home=/root/.ivy2 assembly"
-                sh "cd policy-enforcement-engine-api && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2  universal:packageZipTarball"
+                sh "cd policy-enforcement-engine-api && sbt -Dsbt.global.base=.sbt -Dsbt.boot.directory=.sbt -Dsbt.ivy.home=.ivy2 universal:packageZipTarball"
                 echo "Done."
 		    
                 // Lets make the JAR available from the artifacts tab in Jenkins
 		    
                 echo "Archiving artifacts..."
-                //archiveArtifacts 'policy-enforcement-engine-api/target/universal/*.tgz'
+                archiveArtifacts 'policy-enforcement-engine-api/target/universal/*.tgz'
                 echo "Done."
 
                 // Run the tests (we don't use a different stage for improving the performance, another stage would mean another agent)

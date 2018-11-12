@@ -35,23 +35,32 @@ Returns a rewritten query and a set of corresponding data tables to retrieve the
   * **output**: JSON response as described above
 
 ## Installation
-Clone repository
+1. Clone repository
 
-Create the policy-enforcement-interface with:
+2. Create the policy-enforcement-interface with:
 ```
 cd policy-enforcement-engine-interface
 mvn clean install
 ```
-Create a lib folder inside policy-enforcement-engine-api, and put there a jar of implementation of the policy-enforcement-engine-interface.
-dummy-policy-enforcement-engine/ folder can be used as an example for implementation of the policy-enforcement-engine-interface.
 
-Create distribution with:
+3. Implement the policy-enforcement-engine-interface: 
+ Create a lib folder inside the imeplemation of policy-enforcement-engine-interface and put there a jar of policy-enforcement-engine-interface.
+dummy-policy-enforcement-engine/ folder can be used as an example for implementation of the policy-enforcement-engine-interface. Here is how it is created:
+```
+cd dummy-policy-enforcement-engine
+sbt package
+```
+
+
+4. Create a lib folder inside policy-enforcement-engine-api, and put there a jar of implementation of the policy-enforcement-engine-interface.
+
+5. Create distribution with:
 ```
 cd policy-enforcement-engine-api
 sbt universal:packageZipTarball
 ```
 
-Unzip the archive in target/universal/:
+6. Unzip the archive in target/universal/:
 ```
 tar xvfz policy-enforcement-engine-1.0.tgz
 ```

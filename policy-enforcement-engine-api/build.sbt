@@ -6,7 +6,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.7"
 
-resolvers += Resolver.mavenLocal
 
 
 
@@ -15,7 +14,6 @@ libraryDependencies ++= {
   val sparkVersion = "2.3.0"
   val hadoopVersion = "2.8.2"
   Seq(
-    "com.ditas" % "policy-enforcement-engine-interface" % "1.0",
     jdbc,
     ehcache,
     ws,
