@@ -18,18 +18,20 @@
 package controllers
 
 import javax.inject.Inject
-
 import io.swagger.annotations._
-import models.{RequestQuery, ResponseQuery, TableName}
+import models.{EncryptionProperty, RequestQuery, ResponseQuery, TableName}
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.{Configuration, Logger}
 import java.nio.file.Paths
+
+import akka.japi.Option.Some
 import org.slf4j.LoggerFactory
 import bootstrap.Init
+import org.apache.spark.sql.types.StructType
+
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
-
-
 import scala.concurrent.Future
 
 // TODO thread pool!!!
@@ -64,6 +66,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       LOGGER.error("Missing config file, existing EnforcementEngine");
       Future.successful(BadRequest("Missing config file"))
     } else {
+
       configFullPath = config.get[String]("enforcementEngine.runtime.configFullPath")
       val accessType = queryObject.access
       val blueprintId = queryObject.blueprintId
@@ -77,18 +80,20 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         //and an array of tables names to apply the query on in order to get the compilant result.
         val name: String = config.get[String]("enforcementEngine.className")
 
-        val obj = Class.forName(name).newInstance().asInstanceOf[policy.enforcement.engine.PolicyEnforcementEngineInterface]
-        result = obj.getNewQuery(spark, configFullPath, purpose, accessType, query, "requester.id", requesterId)
+        val enforcementEngine = Class.forName(name).newInstance().asInstanceOf[policy.enforcement.engine.PolicyEnforcementEngineInterface]
+        result = enforcementEngine.getNewQuery(spark, configFullPath, purpose, accessType, query, "requester.id", requesterId)
 
       } catch {
         case e: Exception => result = null; LOGGER.error("Failed to rewrite the query", e);
       }
+
       if (result == null ||
         result.rewrittenSQLquery == null ||
         result.rewrittenSQLquery.equals("") ||
-        result.tableArray.length == 0)
+        result.tableArray.length == 0) {
         Future.successful(InternalServerError("Failed to rewrite the query."))
-      else {
+      } else {
+
         LOGGER.info("EnforcementEngine succeed to rewrite the query!")
 
         //construct the response
@@ -97,11 +102,40 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
           val newTableName = new models.TableName(table)
           tables += newTableName
         }
-        val responseQuery: models.ResponseQuery = new models.ResponseQuery(result.rewrittenSQLquery, tables)
 
+        var enforcementEngine: policy.enforcement.engine.PolicyEnforcementEngineInterface = null
+        try {
+          //RewrittenQueryResponse object which is the enforcement engine response contains the rewritten query
+          //and an array of tables names to apply the query on in order to get the compilant result.
+          val name: String = config.get[String]("enforcementEngine.className")
+
+          enforcementEngine = Class.forName(name).newInstance().asInstanceOf[policy.enforcement.engine.PolicyEnforcementEngineInterface]
+          result = enforcementEngine.getNewQuery(spark, configFullPath, purpose, accessType, query, "requester.id", requesterId)
+
+        } catch {
+          case e: Exception => result = null; LOGGER.error("Failed to rewrite the query", e);
+        }
+
+        val token: String = "TODO_Token"
+        val kmsClass: String = "TODO_KmsClass"
+        val keyManagementParametersMap: mutable.Map[String, String] = null
+        val policyEngineParametersMap: mutable.Map[String, String] = null
+        val schema: StructType = null
+        val dataSetStoragePath: String = "TODO_path"
+        //    getCryptoSessionProperties(token: String, spark: SparkSession, kmsClass: String,
+        //      keyManagementParametersMap: mutable.Map[String, String], policyEngineParametersMap: mutable.Map[String, String])
+        val (sessionEncryptionProperties, keyAttributeNames) = enforcementEngine.getCryptoSessionProperties(token, spark, kmsClass,
+          keyManagementParametersMap, policyEngineParametersMap)
+        val datasetEncryptionProperties = enforcementEngine.getDatasetEncryptionProperties(schema, dataSetStoragePath, purpose, accessType, keyAttributeNames): mutable.Map[String, String]
+        val encryptionPropertiesMap: mutable.Map[String, String] = (sessionEncryptionProperties ++ datasetEncryptionProperties)
+        val encryptionPropertiesSeq = encryptionPropertiesMap.map(entry => new EncryptionProperty(entry._1, entry._2))
+        val encryptionProperties: ArrayBuffer[EncryptionProperty] = new ArrayBuffer[EncryptionProperty]()
+        encryptionProperties.insertAll(0, encryptionPropertiesSeq)
+
+        val responseQuery: models.ResponseQuery = new models.ResponseQuery(result.rewrittenSQLquery, tables, encryptionProperties)
         Future.successful(Ok(Json.toJson(responseQuery)))
+
       }
     }
   }
-
 }

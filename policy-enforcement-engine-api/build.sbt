@@ -4,7 +4,7 @@ version := "1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 
 
@@ -26,8 +26,13 @@ libraryDependencies ++= {
     "org.codehaus.janino" % "janino" % "3.0.8",
     guice,
     "org.apache.hadoop" % "hadoop-client" % hadoopVersion,
-    "org.apache.spark" % "spark-core_2.11" % sparkVersion exclude("org.apache.hadoop","hadoop-client"),
-    "org.apache.spark" % "spark-sql_2.11" % sparkVersion,
+    "org.apache.spark" % "spark-core_2.11" % sparkVersion  excludeAll(
+      ExclusionRule(organization = "org.apache.parquet", name = "parquet-hadoop"),
+      ExclusionRule(organization = "org.apache.parquet", name = "parquet-format"),
+      ExclusionRule("org.apache.hadoop","hadoop-client")),
+    "org.apache.spark" % "spark-sql_2.11" % sparkVersion excludeAll(
+      ExclusionRule(organization = "org.apache.parquet", name = "parquet-hadoop"),
+      ExclusionRule(organization = "org.apache.parquet", name = "parquet-format")),
     "org.apache.hadoop" % "hadoop-aws" % hadoopVersion,
     "com.amazonaws" % "aws-java-sdk-bundle" % "1.11.234",
     "mysql" % "mysql-connector-java" % "6.0.6",
@@ -36,6 +41,15 @@ libraryDependencies ++= {
       specs2 % Test
   )
 }
+
+dependencyOverrides ++= {
+  Seq(
+    "org.apache.parquet" % "parquet-hadoop" % "1.8.2-GG",
+    "org.apache.parquet" % "parquet-format" % "2.3.1-GG"
+  )
+}
+
+
 libraryDependencies ~= {
   _.map(_.exclude("org.slf4j", "slf4j-log4j12"))
 }

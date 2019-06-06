@@ -32,7 +32,9 @@ case class ResponseQuery(@ApiModelProperty(value="The rewritten query", dataType
                          example="SELECT cholesterol from blood_tests WITH blood_tests AS...")
                          rewrittenQuery:       String,
                          @ApiModelProperty(value="The list of tables needed to extract the compliant result")
-                         tables:       ArrayBuffer[TableName])
+                         tables:       ArrayBuffer[TableName],
+                         @ApiModelProperty(value="A map of encryption properties, if mandated by policies", allowEmptyValue = true)
+                         encryptionProperties: ArrayBuffer[EncryptionProperty])
 
 
 

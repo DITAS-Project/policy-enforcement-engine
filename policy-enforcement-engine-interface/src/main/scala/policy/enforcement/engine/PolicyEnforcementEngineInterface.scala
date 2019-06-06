@@ -18,10 +18,37 @@
 package policy.enforcement.engine
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.StructType
+
+import scala.collection.mutable
 
 /* Enforcement engine should implement this interface. */
 trait PolicyEnforcementEngineInterface {
 
   def getNewQuery(spark: SparkSession, configPath: String, purpose: String, access: String, query: String,
                   requesterProperty: String, requesterVal: String): RewrittenQueryResponse
+
+  /**
+    * Get the required configuration parameters for SparkContext, which enable parquet encryption of datasets
+    * in the current session.
+    *
+    * @param token                      The authentication token to be used when using key manger
+    * @param kmsClass                   The class of key protect to use
+    * @param keyManagementParametersMap key value for additional parameters.
+    * @param policyEngineParametersMap  key value for additional parameters specific to the policy engine implementation.
+    *
+    */
+  //key manager policy enngine paramers keyProtectURL URL
+  def getCryptoSessionProperties(token: String, spark: SparkSession, kmsClass: String,
+    keyManagementParametersMap: mutable.Map[String, String], policyEngineParametersMap: mutable.Map[String, String]): (mutable.Map[String, String], java.util.List[String])
+
+  /**
+    * Get the required configuration parameters for SparkContext, which enable parquet encryption
+    * of a specific dataset.
+    *
+    * @param schema               The schema of the data frame.
+    * @param dataSetStoragePath The path to where the data frame will be stored.
+    */
+  def getDatasetEncryptionProperties(schema: StructType, dataSetStoragePath: String, purpose: String, accessType: String, keyAttributeNames : java.util.List[String]): mutable.Map[String, String]
+
 }
