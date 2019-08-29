@@ -39,8 +39,7 @@ trait PolicyEnforcementEngineInterface {
     *
     */
   //key manager policy enngine paramers keyProtectURL URL
-  def getCryptoSessionProperties(token: String, spark: SparkSession, kmsClass: String,
-    keyManagementParametersMap: mutable.Map[String, String], policyEngineParametersMap: mutable.Map[String, String]): (mutable.Map[String, String], java.util.List[String])
+  def getCryptoSessionProperties(token: String, kmsClass: String, kmsInstanceURL: String, policyEngineParametersMap: mutable.Map[String, String]): mutable.Map[String, String]
 
   /**
     * Get the required configuration parameters for SparkContext, which enable parquet encryption
@@ -49,6 +48,6 @@ trait PolicyEnforcementEngineInterface {
     * @param schema               The schema of the data frame.
     * @param dataSetStoragePath The path to where the data frame will be stored.
     */
-  def getDatasetEncryptionProperties(schema: StructType, dataSetStoragePath: String, purpose: String, accessType: String, keyAttributeNames : java.util.List[String]): mutable.Map[String, String]
+  def getDatasetEncryptionProperties(schema: StructType, dataSetStoragePath: String, purpose: String, accessType: String): mutable.Map[String, String]
 
 }
