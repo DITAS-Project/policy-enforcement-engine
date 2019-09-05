@@ -25,7 +25,9 @@ libraryDependencies ++= {
     "com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B4",
     "org.codehaus.janino" % "janino" % "3.0.8",
     guice,
-    "org.apache.hadoop" % "hadoop-client" % hadoopVersion,
+    "org.apache.hadoop" % "hadoop-client" % hadoopVersion excludeAll(
+      ExclusionRule(organization = "org.apache.parquet", name = "parquet-hadoop"),
+      ExclusionRule(organization = "org.apache.parquet", name = "parquet-format")),
     "org.apache.spark" % "spark-core_2.11" % sparkVersion  excludeAll(
       ExclusionRule(organization = "org.apache.parquet", name = "parquet-hadoop"),
       ExclusionRule(organization = "org.apache.parquet", name = "parquet-format"),

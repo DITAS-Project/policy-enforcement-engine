@@ -28,7 +28,7 @@ import java.nio.file.Paths
 import akka.japi.Option.Some
 import org.slf4j.LoggerFactory
 import bootstrap.Init
-import org.apache.parquet.hadoop.VaultClient
+import com.ibm.parquet.key.management.VaultClient
 import org.apache.spark.sql.types.StructType
 
 import scala.collection.mutable
@@ -116,12 +116,10 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         // configFullPath
         val schema: StructType = null
         val dataSetStoragePath: String = "TODO_path"
-        //    getCryptoSessionProperties(token: String, spark: SparkSession, kmsClass: String,
-        //      keyManagementParametersMap: mutable.Map[String, String], policyEngineParametersMap: mutable.Map[String, String])
         val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl,
           policyEngineParametersMap)
         val datasetEncryptionProperties = enforcementEngine.getDatasetEncryptionProperties(schema, dataSetStoragePath, purpose, accessType): mutable.Map[String, String]
-        val encryptionPropertiesMap: mutable.Map[String, String] = (sessionEncryptionProperties ++ datasetEncryptionProperties)
+        val encryptionPropertiesMap: mutable.Map[String, String] = sessionEncryptionProperties ++ datasetEncryptionProperties
         val encryptionPropertiesSeq = encryptionPropertiesMap.map(entry => new EncryptionProperty(entry._1, entry._2))
         val encryptionProperties: ArrayBuffer[EncryptionProperty] = new ArrayBuffer[EncryptionProperty]()
         encryptionProperties.insertAll(0, encryptionPropertiesSeq)
@@ -132,4 +130,5 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       }
     }
   }
+
 }

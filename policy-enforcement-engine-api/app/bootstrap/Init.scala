@@ -30,10 +30,15 @@ import org.apache.spark.sql.SparkSession
 class Init @Inject() (lifecycle: ApplicationLifecycle, config: Configuration) {
 
   Logger.info("Starting Enforcement Engine")
+  val parallelism = 4
   private var sparkSession = SparkSession.builder
     .master(config.get[String]("spark.master"))
     .appName(config.get[String]("spark.app.name"))
     .config("spark.jars", config.get[String]("spark.jars"))
+    .config("spark.sql.shuffle.partitions", parallelism)
+    .config("spark.default.parallelism", parallelism)
+    .config("spark.executor.cores", parallelism)
+    .config("spark.driver.cores", 1)
     .config("spark.hadoop.fs.s3a.endpoint", config.get[String]("spark.hadoop.fs.s3a.endpoint"))
     .config("spark.hadoop.fs.s3a.access.key", config.get[String]("spark.hadoop.fs.s3a.access.key"))
     .config("spark.hadoop.fs.s3a.secret.key", config.get[String]("spark.hadoop.fs.s3a.secret.key"))
