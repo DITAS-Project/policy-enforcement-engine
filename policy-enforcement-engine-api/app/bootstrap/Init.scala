@@ -49,6 +49,7 @@ class Init @Inject() (lifecycle: ApplicationLifecycle, config: Configuration) {
 
   lifecycle.addStopHook { () =>
     Logger.info("Stopping Enforcement Engine")
+    sparkSession.close()
     Future.successful()
   }
   def getSparkSessionInstance = {

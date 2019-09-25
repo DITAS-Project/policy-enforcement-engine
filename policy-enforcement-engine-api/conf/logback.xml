@@ -52,8 +52,11 @@
 
 	</appender>
 
+  <logger name="com.ibm.research.storage.policy.enforcement.sql.runtime" level="DEBUG" />
+  <logger name="controllers.EnforcementEngine" level="DEBUG" />
+  <!-- <logger name="" level="DEBUG" /> -->
 
-  <root level="debug" additivity="false">
+  <root level="WARN" additivity="false">
     <appender-ref ref="console"/>
     <appender-ref ref="FILE-ERROR" />
   </root>
