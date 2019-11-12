@@ -28,7 +28,6 @@ import java.nio.file.Paths
 import akka.japi.Option.Some
 import org.slf4j.LoggerFactory
 import bootstrap.Init
-import com.ibm.parquet.key.management.VaultClient
 import org.apache.spark.sql.types.StructType
 
 import scala.collection.mutable
@@ -107,7 +106,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         }
 
         val token: String = authHeader.getOrElse("")
-        val kmsClass: String = classOf[VaultClient].getName
+        val kmsClass: String = config.get[String]("kmsClass") // "com.ibm.parquet.key.management.VaultClient"
         val policyEngineParametersMap: mutable.Map[String, String] =
           mutable.Map[String, String] ("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
             "locationConfigFile" -> config.get[String]("enforcementEngine.runtime.connectionsConfigFullPath"))
