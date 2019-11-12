@@ -18,6 +18,8 @@
 package dummy.policy.enforcement.engine
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.StructType
+import scala.collection.mutable.Map
 
 class DummyPolicyEnforcementEngine extends policy.enforcement.engine.PolicyEnforcementEngineInterface {
 
@@ -39,8 +41,8 @@ class DummyPolicyEnforcementEngine extends policy.enforcement.engine.PolicyEnfor
     */
   //key manager policy enngine paramers keyProtectURL URL
   @Override
-  override def getCryptoSessionProperties(token: String, kmsClass: String, kmsInstanceURL: String, policyEngineParametersMap: mutable.Map[String, String]): mutable.Map[String, String] = {
-    null
+  override def getCryptoSessionProperties(token: String, kmsClass: String, kmsInstanceURL: String, policyEngineParametersMap: Map[String, String]): Map[String, String] = {
+    Map.empty[String, String]
   }
 
   /**
@@ -51,8 +53,8 @@ class DummyPolicyEnforcementEngine extends policy.enforcement.engine.PolicyEnfor
     * @param dataSetStoragePath The path to where the data frame will be stored.
     */
   @Override
-  override def getDatasetEncryptionProperties(schema: StructType, dataSetStoragePath: String, purpose: String, accessType: String): mutable.Map[String, String] = {
-    null
+  override def getDatasetEncryptionProperties(schema: StructType, dataSetStoragePath: String, purpose: String, accessType: String): Map[String, String] = {
+    Map.empty[String, String]
   }
 
 }
