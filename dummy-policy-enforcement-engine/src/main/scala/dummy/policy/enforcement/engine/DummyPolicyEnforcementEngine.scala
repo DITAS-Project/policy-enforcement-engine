@@ -26,4 +26,33 @@ class DummyPolicyEnforcementEngine extends policy.enforcement.engine.PolicyEnfor
                            requesterVal: String): policy.enforcement.engine.RewrittenQueryResponse = {
     null
   }
+
+  /**
+    * Get the required configuration parameters for SparkContext, which enable parquet encryption of datasets
+    * in the current session.
+    *
+    * @param token                      The authentication token to be used when using key manger
+    * @param kmsClass                   The class of key protect to use
+    * @param keyManagementParametersMap key value for additional parameters.
+    * @param policyEngineParametersMap  key value for additional parameters specific to the policy engine implementation.
+    *
+    */
+  //key manager policy enngine paramers keyProtectURL URL
+  @Override
+  override def getCryptoSessionProperties(token: String, kmsClass: String, kmsInstanceURL: String, policyEngineParametersMap: mutable.Map[String, String]): mutable.Map[String, String] = {
+    null
+  }
+
+  /**
+    * Get the required configuration parameters for SparkContext, which enable parquet encryption
+    * of a specific dataset.
+    *
+    * @param schema               The schema of the data frame.
+    * @param dataSetStoragePath The path to where the data frame will be stored.
+    */
+  @Override
+  override def getDatasetEncryptionProperties(schema: StructType, dataSetStoragePath: String, purpose: String, accessType: String): mutable.Map[String, String] = {
+    null
+  }
+
 }
