@@ -46,8 +46,8 @@ libraryDependencies ++= {
 
 dependencyOverrides ++= {
   Seq(
-    "org.apache.parquet" % "parquet-hadoop" % "1.8.2-GG",
-    "org.apache.parquet" % "parquet-format" % "2.3.1-GG"
+    "org.apache.parquet" % "parquet-hadoop" % "1.8.2",
+    "org.apache.parquet" % "parquet-format" % "2.3.1"
   )
 }
 
@@ -81,22 +81,4 @@ assemblyMergeStrategy in assembly := {
     oldStrategy(x)
 }
 
-
-enablePlugins(sbtdocker.DockerPlugin, JavaServerAppPackaging)
-
-
-
-dockerfile in docker := {
-  // The assembly task generates a fat JAR file
-  val artifact: File = assembly.value
-  val artifactTargetPath = s"/app/${artifact.name}"
-
-  new Dockerfile {
-    from("java:8-jre-alpine")
-    copy(artifact, artifactTargetPath)
-    expose(9000)
-    entryPoint("java", "-Dplay.http.secret.key='wspl4r'", "-jar", artifactTargetPath)
-  }
-
-}
 
