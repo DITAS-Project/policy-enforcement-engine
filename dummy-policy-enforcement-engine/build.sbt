@@ -2,7 +2,7 @@ name := "dummy-policy-enforcement-engine"
 organization := "com.ditas"
 version := "1.0"
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.11.12"
 
 
 resolvers += Resolver.mavenLocal
