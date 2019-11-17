@@ -48,7 +48,7 @@ pipeline {
         }
 
 
-         stage('Image creation') {
+         stage('Staging image creation') {
             agent any
             options {
                 // Already compiled the WAR, so don't checkout againg (checkout also cleans the workspace, removing any generated artifact)
@@ -59,12 +59,11 @@ pipeline {
                 archiveArtifacts 'policy-enforcement-engine-api/Dockerfile.artifact'
                 sh "which docker"
                 // This will search for a Dockerfile in the src folder and will build the image to the local repository
-                // Using latest tag to override tha newest image in the hub
-                sh "docker build -t \"ditas/policy-enforcement-engine:latest\" -f policy-enforcement-engine-api/Dockerfile.artifact policy-enforcement-engine-api"
+                sh "docker build -t \"ditas/policy-enforcement-engine:staging\" -f policy-enforcement-engine-api/Dockerfile.artifact policy-enforcement-engine-api"
                 echo "Done"
             }
         }
-        stage('Push image') {
+     stage('Push staging image') {
             agent any
             options {
                 // Already compiled the assembly, so don't checkout againg (checkout also cleans the workspace, removing any generated artifact)
@@ -81,13 +80,13 @@ pipeline {
                 echo 'Login to Docker Hub as ditasgeneric...'
                 sh "docker login -u ditasgeneric -p ${password}"
                 echo "Done"
-                echo "Pushing the image ditas/policy-enforcement-engine:latest..."
+                echo "Pushing the image ditas/policy-enforcement-engine:staging..."
                 // Push the image to DockerHub
-                sh "docker push ditas/policy-enforcement-engine:latest"
+                sh "docker push ditas/policy-enforcement-engine:staging"
                 echo "Done"
             }
         }
-	stage('Image deploy') {
+	stage('Image deployment in staging') {
 	    agent any
             options {
                 // skip checking out code again 
@@ -102,5 +101,19 @@ pipeline {
 		echo "Deploy done!"
 	   }
 	}
+        stage('Production image creation') {
+            agent any
+            steps {
+                // Change the tag from staging to production 
+                sh "docker tag ditas/policy-enforcement-engine:staging ditas/policy-enforcement-engine:production"
+                sh "docker push ditas/policy-enforcement-engine:production"
+            }
+        }
+        stage('Deployment in Production') {
+            agent any
+            steps {
+                sh './jenkins/deploy/deploy-production.sh'
+            }
+        }
     }
 }
