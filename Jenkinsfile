@@ -112,7 +112,7 @@ pipeline {
         stage('Deployment in Production') {
             agent any
             steps {
-                sh './jenkins/deploy/deploy-production.sh'
+                sh 'policy-enforcement-engine-api/jenkins/deploy/deploy-production.sh'
             }
         }
     }
