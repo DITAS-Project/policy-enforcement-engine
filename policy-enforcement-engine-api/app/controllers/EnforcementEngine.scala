@@ -17,18 +17,15 @@
   */
 package controllers
 
-import javax.inject.Inject
-import io.swagger.annotations._
-import models.{EncryptionProperty, RequestQuery, ResponseQuery, TableName}
-import play.api.mvc._
-import play.api.libs.json._
-import play.api.{Configuration, Logger}
-import java.nio.file.Paths
-
-import akka.japi.Option.Some
-import org.slf4j.LoggerFactory
 import bootstrap.Init
+import io.swagger.annotations._
+import javax.inject.Inject
+import models.{EncryptionProperty, RequestQuery}
 import org.apache.spark.sql.types.StructType
+import org.slf4j.LoggerFactory
+import play.api.libs.json._
+import play.api.mvc._
+import play.api.{Configuration, Logger}
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -105,8 +102,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
           tables += newTableName
         }
 
-        val token: String = authHeader.getOrElse("")
-        val kmsClass: String = config.get[String]("kmsClass") // "com.ibm.parquet.key.management.VaultClient"
+        val token: String = authHeader.getOrElse("").replace("Bearer ", "")
         val policyEngineParametersMap: mutable.Map[String, String] =
           mutable.Map[String, String] ("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
             "locationConfigFile" -> config.get[String]("enforcementEngine.runtime.connectionsConfigFullPath"))
@@ -115,6 +111,12 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         // configFullPath
         val schema: StructType = null
         val dataSetStoragePath: String = "TODO_path"
+        var kmsClass: String = null
+        if ((null == kmsInstanceUrl) || (""  == kmsInstanceUrl)) {
+          kmsClass = "com.ibm.parquet.key.management.LocalKMS"
+        } else {
+          kmsClass = "com.ibm.parquet.key.management.VaultClient"
+        }
         val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl,
           policyEngineParametersMap)
         val datasetEncryptionProperties = enforcementEngine.getDatasetEncryptionProperties(schema, dataSetStoragePath, purpose, accessType): mutable.Map[String, String]

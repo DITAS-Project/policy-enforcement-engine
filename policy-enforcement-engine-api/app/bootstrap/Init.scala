@@ -45,6 +45,7 @@ class Init @Inject() (lifecycle: ApplicationLifecycle, config: Configuration) {
     .config("spark.hadoop.fs.s3a.path.style.access", config.get[String]("spark.hadoop.fs.s3a.path.style.access"))
     .config("spark.hadoop.fs.s3a.impl", config.get[String]("spark.hadoop.fs.s3a.impl"))
     .config("spark.hadoop.fs.AbstractFileSystem.s3a.impl", config.get[String]("spark.hadoop.fs.AbstractFileSystem.s3a.impl"))
+    .config("spark.ui.enabled", false)
     .getOrCreate()
 
   lifecycle.addStopHook { () =>
