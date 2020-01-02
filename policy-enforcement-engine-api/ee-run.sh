@@ -4,7 +4,7 @@ function check {
     [ -z "$2" ] && echo "Need to set $1" && exit 1;
 }
 
-if [[ -z "$MINIO_URI" ]]; then
+if [[ ! -z "$MINIO_URI" ]]; then
  check MINIO_ACCESS_KEY $MINIO_ACCESS_KEY
  check MINIO_SECRET_KEY $MINIO_SECRET_KEY
  check KEYCLOAK_PUBLIC_KEY_URI $KEYCLOAK_PUBLIC_KEY_URI
