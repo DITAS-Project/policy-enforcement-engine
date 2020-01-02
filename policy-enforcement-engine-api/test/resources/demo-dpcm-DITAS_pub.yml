@@ -1,0 +1,9 @@
+
+
+resultFullPath: /app/policy-enforcement-engine-1.0/TESDataItemsDemo_result
+
+
+isDebugPrint: false
+connectionsConfigFile: "/app/policy-enforcement-engine-1.0/conf/connections-DITAS.yml"
+s3ProtocolName: s3a
+

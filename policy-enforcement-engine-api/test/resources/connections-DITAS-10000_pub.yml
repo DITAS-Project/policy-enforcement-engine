@@ -1,0 +1,57 @@
+s3Sources:
+ -
+   #name should be unique it is the same as the name that will be used
+   #in createTmpView and select query
+   name: blood_tests
+   endpoint: "#{MINIO_URI}"
+   accessKey: "#{MINIO_ACCESS_KEY}"
+   secretKey: "#{MINIO_SECRET_KEY}"
+   pathStyleAccess: "true"
+   impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+   abstractFileSystem_s3a_impl: "org.apache.hadoop.fs.s3a.S3A"
+   s3_filename: "#{MINIO_FILE}"
+   protocolName: s3a
+   db_table: blood-tests-20.parquet
+
+ -
+   #name should be unique it is the same as the name that will be used
+   #in createTmpView and select query
+   name: blood_tests_clauses
+   endpoint: "#{MINIO_URI}"
+   accessKey: "#{MINIO_ACCESS_KEY}"
+   secretKey: "#{MINIO_SECRET_KEY}"
+   pathStyleAccess: "true"
+   impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+   abstractFileSystem_s3a_impl: "org.apache.hadoop.fs.s3a.S3A"
+   s3_filename: "s3a://ditas.dummy-example/blood_tests_10000.clausesDemo"
+   protocolName: s3a
+   db_table: blood_tests_10000.clausesDemo
+
+ -
+   #name should be unique it is the same as the name that will be used
+   #in createTmpView and select query
+   name: blood_tests_rules
+   endpoint: "#{MINIO_URI}"
+   accessKey: "#{MINIO_ACCESS_KEY}"
+   secretKey: "#{MINIO_SECRET_KEY}"
+   pathStyleAccess: "true"
+   impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+   abstractFileSystem_s3a_impl: "org.apache.hadoop.fs.s3a.S3A"
+   s3_filename: "s3a://ditas.dummy-example/blood_tests_10000.rulesDemo"
+   protocolName: s3a
+   db_table: blood_tests_10000.rulesDemo
+ -
+   #name should be unique it is the same as the name that will be used
+   #in createTmpView and select query
+   name: consent
+   endpoint: "#{MINIO_URI}"
+   accessKey: "#{MINIO_ACCESS_KEY}"
+   secretKey: "#{MINIO_SECRET_KEY}"
+   pathStyleAccess: "true"
+   impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+   abstractFileSystem_s3a_impl: "org.apache.hadoop.fs.s3a.S3A"
+   s3_filename: "s3a://ditas.dummy-example/consents.backup.Consents10000Demo/"
+   protocolName: s3a
+   db_table: consents.DPCMConsentsDemo
+
+

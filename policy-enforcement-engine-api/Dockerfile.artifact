@@ -5,4 +5,9 @@ RUN /bin/sh -c "apk add --no-cache bash"
 RUN apk --update add tar
 RUN ["apk", "add", "--update", "bash", "libc6-compat", "curl"]
 RUN ["tar", "xvzf", "app/policy-enforcement-engine-1.0.tgz", "-C", "app"]
-ENTRYPOINT ["app/policy-enforcement-engine-1.0/bin/policy-enforcement-engine",  "-Dplay.http.secret.key='wspl4r'", "-Dconfig.file=/app/policy-enforcement-engine-1.0-SNAPSHOT/conf/application.conf", "-Dpidfile.path=/dev/null"]
+COPY test/resources/connections-DITAS-10000_pub.yml app/policy-enforcement-engine-1.0/conf/connections-DITAS-10000.yml.sed
+COPY test/resources/demo-dpcm-DITAS_pub.yml app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml.sed
+COPY test/resources/PolicyEnforcement-application_pub.conf app/policy-enforcement-engine-1.0/conf/application.conf.sed
+COPY ee-run.sh /app/policy-enforcement-engine-1.0/ee-run.sh
+RUN chmod +x /app/policy-enforcement-engine-1.0/ee-run.sh
+CMD ["/app/policy-enforcement-engine-1.0/ee-run.sh"]
