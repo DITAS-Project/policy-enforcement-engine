@@ -13,6 +13,7 @@ sudo docker create --name  policy-enforcement-engine  -p 50004:9000 --restart un
 sudo docker cp /home/cloudsigma/configurations/policy-enforcement-engine/applicationEngine.conf policy-enforcement-engine:/app/policy-enforcement-engine-1.0/conf/application.conf
 sudo docker cp /home/cloudsigma/configurations/policy-enforcement-engine/connections-DITAS.yml policy-enforcement-engine:/app/policy-enforcement-engine-1.0/conf/connections-DITAS.yml
 sudo docker cp /home/cloudsigma/configurations/policy-enforcement-engine/demo-dpcm-DITAS.yml policy-enforcement-engine:/app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml
+sudo docker cp /home/cloudsigma/configurations/policy-enforcement-engine/dpcm-config-new.yml policy-enforcement-engine:/app/policy-enforcement-engine-1.0/conf/dpcm-config-new.yml
 sudo docker cp /home/cloudsigma/configurations/policy-enforcement-engine/demo-sparksql-1.0-SNAPSHOT-jar-with-dependencies.jar policy-enforcement-engine:/app/policy-enforcement-engine-1.0/lib/dummy_enforcement_engine.jar
 sudo docker start policy-enforcement-engine
 ENDSSH

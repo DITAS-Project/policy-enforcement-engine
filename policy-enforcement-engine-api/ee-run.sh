@@ -7,27 +7,27 @@ function check {
 if [[ ! -z "$MINIO_URI" ]]; then
  check MINIO_ACCESS_KEY $MINIO_ACCESS_KEY
  check MINIO_SECRET_KEY $MINIO_SECRET_KEY
- check KEYCLOAK_PUBLIC_KEY_URI $KEYCLOAK_PUBLIC_KEY_URI
+ check KMS_URI $KMS_URI
  check MINIO_FILE $MINIO_FILE
 
  sed -e "s,#{MINIO_URI},$MINIO_URI,g" \
     -e "s,#{MINIO_ACCESS_KEY},$MINIO_ACCESS_KEY,g" \
     -e "s,#{MINIO_SECRET_KEY},$MINIO_SECRET_KEY,g" \
-    -e "s,#{KEYCLOAK_PUBLIC_KEY_URI},$KEYCLOAK_PUBLIC_KEY_URI,g" \
+    -e "s,#{KMS_URI},$KMS_URI,g" \
     -e "s,#{MINIO_FILE},$MINIO_FILE,g" \
     /app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml.sed > /app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml
 
  sed -e "s,#{MINIO_URI},$MINIO_URI,g" \
     -e "s,#{MINIO_ACCESS_KEY},$MINIO_ACCESS_KEY,g" \
     -e "s,#{MINIO_SECRET_KEY},$MINIO_SECRET_KEY,g" \
-    -e "s,#{KEYCLOAK_PUBLIC_KEY_URI},$KEYCLOAK_PUBLIC_KEY_URI,g" \
+    -e "s,#{KMS_URI},$KMS_URI,g" \
     -e "s,#{MINIO_FILE},$MINIO_FILE,g" \
     /app/policy-enforcement-engine-1.0/conf/connections-DITAS.yml.sed > /app/policy-enforcement-engine-1.0/conf/connections-DITAS.yml
 
  sed -e "s,#{MINIO_URI},$MINIO_URI,g" \
     -e "s,#{MINIO_ACCESS_KEY},$MINIO_ACCESS_KEY,g" \
     -e "s,#{MINIO_SECRET_KEY},$MINIO_SECRET_KEY,g" \
-    -e "s,#{KEYCLOAK_PUBLIC_KEY_URI},$KEYCLOAK_PUBLIC_KEY_URI,g" \
+    -e "s,#{KMS_URI},$KMS_URI,g" \
     -e "s,#{MINIO_FILE},$MINIO_FILE,g" \
     /app/policy-enforcement-engine-1.0/conf/application.conf.sed > /app/policy-enforcement-engine-1.0/conf/application.conf
 fi

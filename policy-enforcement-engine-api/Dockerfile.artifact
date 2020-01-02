@@ -5,7 +5,7 @@ RUN /bin/sh -c "apk add --no-cache bash"
 RUN apk --update add tar
 RUN ["apk", "add", "--update", "bash", "libc6-compat", "curl"]
 RUN ["tar", "xvzf", "app/policy-enforcement-engine-1.0.tgz", "-C", "app"]
-COPY test/resources/connections-DITAS-10000_pub.yml app/policy-enforcement-engine-1.0/conf/connections-DITAS-10000.yml.sed
+COPY test/resources/connections-DITAS-10000_pub.yml app/policy-enforcement-engine-1.0/conf/connections-DITAS.yml.sed
 COPY test/resources/demo-dpcm-DITAS_pub.yml app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml.sed
 COPY test/resources/PolicyEnforcement-application_pub.conf app/policy-enforcement-engine-1.0/conf/application.conf.sed
 COPY ee-run.sh /app/policy-enforcement-engine-1.0/ee-run.sh
