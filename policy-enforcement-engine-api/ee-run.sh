@@ -32,6 +32,13 @@ if [[ ! -z "$MINIO_URI" ]]; then
     /app/policy-enforcement-engine-1.0/conf/application.conf.sed > /app/policy-enforcement-engine-1.0/conf/application.conf
 fi
 
+if [[ ! -z "$MYSQL_URI" ]]; then
+ sed -e "s,#{MYSQL_URI},$MYSQL_URI,g" \
+    -e "s,#{MYSQL_USERNAME},$MYSQL_USERNAME,g" \
+    -e "s,#{MYSQL_PASSWORD},$MYSQL_PASSWORD,g" \
+    /app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml.sed > /app/policy-enforcement-engine-1.0/conf/demo-dpcm-DITAS.yml
+fi
+
 
 _term() {
   echo "Caught SIGTERM signal!"

@@ -106,18 +106,18 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         val policyEngineParametersMap: mutable.Map[String, String] =
           mutable.Map[String, String] ("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
             "locationConfigFile" -> config.get[String]("enforcementEngine.runtime.connectionsConfigFullPath"))
-        val kmsInstanceUrl = config.get[String]("kmsInstanceURL")
+        val kmsInstanceUrl = config.getOptional[String]("kmsInstanceURL")
 
         // configFullPath
         val schema: StructType = null
         val dataSetStoragePath: String = "TODO_path"
         var kmsClass: String = null
-        if ((null == kmsInstanceUrl) || (""  == kmsInstanceUrl)) {
+        if ((null == kmsInstanceUrl) || ("NONE"  == kmsInstanceUrl)) {
           kmsClass = "com.ibm.parquet.key.management.LocalKMS"
         } else {
           kmsClass = "com.ibm.parquet.key.management.VaultClient"
         }
-        val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl,
+        val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl.getOrElse("NONE"),
           policyEngineParametersMap)
         val datasetEncryptionProperties = enforcementEngine.getDatasetEncryptionProperties(schema, dataSetStoragePath, purpose, accessType): mutable.Map[String, String]
         val encryptionPropertiesMap: mutable.Map[String, String] = sessionEncryptionProperties ++ datasetEncryptionProperties
