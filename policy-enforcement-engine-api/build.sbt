@@ -36,7 +36,7 @@ libraryDependencies ++= {
       ExclusionRule(organization = "org.apache.parquet", name = "parquet-hadoop"),
       ExclusionRule(organization = "org.apache.parquet", name = "parquet-format")),
     "org.apache.hadoop" % "hadoop-aws" % hadoopVersion,
-    "com.amazonaws" % "aws-java-sdk-bundle" % "1.11.234",
+    "com.amazonaws" % "aws-java-sdk-bundle" % "1.11.524",
     "mysql" % "mysql-connector-java" % "6.0.6",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test,
     "javax.servlet" % "servlet-api" % "2.5",
