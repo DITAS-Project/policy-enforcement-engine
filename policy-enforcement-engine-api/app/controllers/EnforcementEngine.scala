@@ -112,10 +112,10 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
         val schema: StructType = null
         val dataSetStoragePath: String = "TODO_path"
         var kmsClass: String = null
-        if ((null == kmsInstanceUrl) || ("NONE"  == kmsInstanceUrl)) {
-          kmsClass = "com.ibm.parquet.key.management.LocalKMS"
-        } else {
+        if (kmsInstanceUrl.getOrElse("NONE").startsWith("http")) {
           kmsClass = "com.ibm.parquet.key.management.VaultClient"
+        } else {
+          kmsClass = "com.ibm.parquet.key.management.LocalKMS"
         }
         val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl.getOrElse("NONE"),
           policyEngineParametersMap)
