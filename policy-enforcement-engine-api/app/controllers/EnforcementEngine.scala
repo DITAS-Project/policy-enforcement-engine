@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory
 import play.api.libs.json._
 import play.api.mvc._
 import play.api.{Configuration, Logger}
+import policy.enforcement.engine.RewrittenQueryResponse
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -64,35 +65,37 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       LOGGER.error("Missing config file, existing EnforcementEngine");
       Future.successful(BadRequest("Missing config file"))
     } else {
+      var result: policy.enforcement.engine.RewrittenQueryResponse = null
 
       configFullPath = config.get[String]("enforcementEngine.runtime.configFullPath")
+
       val accessType = queryObject.access
       val blueprintId = queryObject.blueprintId
       Logger.info(s"Received query: $query, for purpose: $purpose, blueprintId: $blueprintId")
       val spark = initService.getSparkSessionInstance
 
-      var result: policy.enforcement.engine.RewrittenQueryResponse = null
       var enforcementEngine: policy.enforcement.engine.PolicyEnforcementEngineInterface = null
+      //RewrittenQueryResponse object which is the enforcement engine response contains the rewritten query
+      //and an array of tables names to apply the query on in order to get the compilant result.
+      val name: String = config.get[String]("enforcementEngine.className")
 
-      try {
-        //RewrittenQueryResponse object which is the enforcement engine response contains the rewritten query
-        //and an array of tables names to apply the query on in order to get the compilant result.
-        val name: String = config.get[String]("enforcementEngine.className")
-
-        enforcementEngine = Class.forName(name).newInstance().asInstanceOf[policy.enforcement.engine.PolicyEnforcementEngineInterface]
-        result = enforcementEngine.getNewQuery(spark, configFullPath, purpose, accessType, query, "requester.id", requesterId)
-
-      } catch {
-        case e: Exception => result = null; LOGGER.error("Failed to rewrite the query", e);
+      enforcementEngine = Class.forName(name).newInstance().asInstanceOf[policy.enforcement.engine.PolicyEnforcementEngineInterface]
+      if (!"data_movement_public_cloud".equals(purpose) || !"write".equals(accessType)) {
+        try {
+          result = enforcementEngine.getNewQuery(spark, configFullPath, purpose, accessType, query, "requester.id", requesterId)
+        } catch {
+          case e: Exception => result = null; LOGGER.error("Failed to rewrite the query", e);
+        }
       }
-
-      if (result == null ||
+      if (! "data_movement_public_cloud".equals(purpose) && (result == null ||
         result.rewrittenSQLquery == null ||
         result.rewrittenSQLquery.equals("") ||
-        result.tableArray.length == 0) {
+        result.tableArray.length == 0)) {
         Future.successful(InternalServerError("Failed to rewrite the query."))
       } else {
-
+        if ("data_movement_public_cloud".equals(purpose) && "write".equals(accessType)) {
+          result = new RewrittenQueryResponse
+        }
         LOGGER.info("EnforcementEngine succeed to rewrite the query!")
 
         //construct the response
@@ -104,7 +107,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
 
         val token: String = authHeader.getOrElse("").replace("Bearer ", "")
         val policyEngineParametersMap: mutable.Map[String, String] =
-          mutable.Map[String, String] ("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
+          mutable.Map[String, String]("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
             "locationConfigFile" -> config.get[String]("enforcementEngine.runtime.connectionsConfigFullPath"))
         val kmsInstanceUrl = config.getOptional[String]("kmsInstanceURL")
 
@@ -127,7 +130,6 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
 
         val responseQuery: models.ResponseQuery = new models.ResponseQuery(result.rewrittenSQLquery, tables, encryptionProperties)
         Future.successful(Ok(Json.toJson(responseQuery)))
-
       }
     }
   }
