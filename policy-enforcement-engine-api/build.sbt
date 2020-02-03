@@ -44,14 +44,6 @@ libraryDependencies ++= {
   )
 }
 
-dependencyOverrides ++= {
-  Seq(
-    "org.apache.parquet" % "parquet-hadoop" % "1.8.2",
-    "org.apache.parquet" % "parquet-format" % "2.3.1"
-  )
-}
-
-
 libraryDependencies ~= {
   _.map(_.exclude("org.slf4j", "slf4j-log4j12"))
 }

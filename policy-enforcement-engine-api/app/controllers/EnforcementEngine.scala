@@ -21,12 +21,13 @@ import bootstrap.Init
 import io.swagger.annotations._
 import javax.inject.Inject
 import models.{EncryptionProperty, RequestQuery}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types.StructType
 import org.slf4j.LoggerFactory
 import play.api.libs.json._
 import play.api.mvc._
 import play.api.{Configuration, Logger}
-import policy.enforcement.engine.RewrittenQueryResponse
+import policy.enforcement.engine.{PolicyEnforcementEngineInterface, RewrittenQueryResponse}
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -51,7 +52,7 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
     val authHeader = request.headers.get("authorization")
     val queryObject = request.body
     val query = queryObject.query
-    val purpose = queryObject.purpose
+    var purpose = queryObject.purpose
     val requesterId = queryObject.requesterId
     var configFullPath: String = null
 
@@ -80,9 +81,16 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
       val name: String = config.get[String]("enforcementEngine.className")
 
       enforcementEngine = Class.forName(name).newInstance().asInstanceOf[policy.enforcement.engine.PolicyEnforcementEngineInterface]
+      val encryptionProperties = fillEncryptionProperties(authHeader, enforcementEngine, purpose, accessType)
+      setEncryptionProperties(spark, encryptionProperties)
+      val originalPurpose = purpose
       if (!"data_movement_public_cloud".equals(purpose) || !"write".equals(accessType)) {
         try {
+          if ("data_movement_public_cloud".equals(purpose)) {
+            purpose = "Research"
+          }
           result = enforcementEngine.getNewQuery(spark, configFullPath, purpose, accessType, query, "requester.id", requesterId)
+          purpose = originalPurpose
         } catch {
           case e: Exception => result = null; LOGGER.error("Failed to rewrite the query", e);
         }
@@ -105,33 +113,45 @@ class EnforcementEngine @Inject() (config: Configuration,  initService: Init) ex
           tables += newTableName
         }
 
-        val token: String = authHeader.getOrElse("").replace("Bearer ", "")
-        val policyEngineParametersMap: mutable.Map[String, String] =
-          mutable.Map[String, String]("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
-            "locationConfigFile" -> config.get[String]("enforcementEngine.runtime.connectionsConfigFullPath"))
-        val kmsInstanceUrl = config.getOptional[String]("kmsInstanceURL")
-
-        // configFullPath
-        val schema: StructType = null
-        val dataSetStoragePath: String = "TODO_path"
-        var kmsClass: String = null
-        if (kmsInstanceUrl.getOrElse("NONE").startsWith("http")) {
-          kmsClass = "com.ibm.parquet.key.management.VaultClient"
-        } else {
-          kmsClass = "com.ibm.parquet.key.management.LocalKMS"
-        }
-        val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl.getOrElse("NONE"),
-          policyEngineParametersMap)
-        val datasetEncryptionProperties = enforcementEngine.getDatasetEncryptionProperties(schema, dataSetStoragePath, purpose, accessType): mutable.Map[String, String]
-        val encryptionPropertiesMap: mutable.Map[String, String] = sessionEncryptionProperties ++ datasetEncryptionProperties
-        val encryptionPropertiesSeq = encryptionPropertiesMap.map(entry => new EncryptionProperty(entry._1, entry._2))
-        val encryptionProperties: ArrayBuffer[EncryptionProperty] = new ArrayBuffer[EncryptionProperty]()
-        encryptionProperties.insertAll(0, encryptionPropertiesSeq)
-
         val responseQuery: models.ResponseQuery = new models.ResponseQuery(result.rewrittenSQLquery, tables, encryptionProperties)
         Future.successful(Ok(Json.toJson(responseQuery)))
       }
     }
   }
 
+  def fillEncryptionProperties(authHeader: Option[String], enforcementEngine: PolicyEnforcementEngineInterface,
+                                purpose: String, accessType: String): ArrayBuffer[EncryptionProperty]  = {
+    val token: String = authHeader.getOrElse("").replace("Bearer ", "")
+    val policyEngineParametersMap: mutable.Map[String, String] =
+      mutable.Map[String, String]("configFile" -> config.get[String]("enforcementEngine.runtime.credentialsFullPath"),
+        "locationConfigFile" -> config.get[String]("enforcementEngine.runtime.connectionsConfigFullPath"))
+    val kmsInstanceUrl = config.getOptional[String]("kmsInstanceURL")
+
+    // configFullPath
+    val schema: StructType = null
+    val dataSetStoragePath: String = "TODO_path"
+    var kmsClass: String = null
+    if (kmsInstanceUrl.getOrElse("NONE").startsWith("http")) {
+      kmsClass = "com.ibm.parquet.key.management.VaultClient"
+    } else {
+      kmsClass = "com.ibm.parquet.key.management.LocalKMS"
+    }
+    val sessionEncryptionProperties = enforcementEngine.getCryptoSessionProperties(token, kmsClass, kmsInstanceUrl.getOrElse("NONE"),
+      policyEngineParametersMap)
+    val datasetEncryptionProperties = enforcementEngine.getDatasetEncryptionProperties(schema, dataSetStoragePath, purpose, accessType): mutable.Map[String, String]
+    val encryptionPropertiesMap: mutable.Map[String, String] = sessionEncryptionProperties ++ datasetEncryptionProperties
+    val encryptionPropertiesSeq = encryptionPropertiesMap.map(entry => new EncryptionProperty(entry._1, entry._2))
+    val encryptionProperties: ArrayBuffer[EncryptionProperty] = new ArrayBuffer[EncryptionProperty]()
+    encryptionProperties.insertAll(0, encryptionPropertiesSeq)
+    encryptionProperties
+  }
+
+  def setEncryptionProperties(spark: SparkSession, encryptionProperties: ArrayBuffer[EncryptionProperty]) = {
+    val hadoopConfig = spark.sparkContext.hadoopConfiguration
+    for (encryptionProperty <- encryptionProperties) {
+      val key = (encryptionProperty.key)
+      val value = (encryptionProperty.value)
+      hadoopConfig.set(key, value)
+    }
+  }
 }
